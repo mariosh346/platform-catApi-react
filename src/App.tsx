@@ -1,6 +1,6 @@
 import { Routes, Route, Link } from 'react-router-dom'
 import Home from './views/Home'
-import ImageView from './views/ImageView' // added ImageView import
+import ImageView from './views/ImageView'
 import './App.css'
 import Favorites from './views/Favorites'
 import Breeds from './views/Breeds'

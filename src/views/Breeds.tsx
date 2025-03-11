@@ -1,4 +1,4 @@
-import { useState, useEffect, JSX } from 'react'
+import { useState, useEffect, useMemo, JSX, memo } from 'react'
 import { Link } from 'react-router-dom'
 import { getBreeds } from '../api/catApi'
 
@@ -7,6 +7,16 @@ interface Breed {
   name: string
   description: string
 }
+
+const BreedListItem = memo(({ breed }: { breed: Breed }) => {
+  return (
+    <li>
+      <Link to={`/breed-detail/${breed.id}`} state={{ breed }}>
+        {breed.name}
+      </Link>
+    </li>
+  )
+})
 
 function Breeds(): JSX.Element {
   const [breeds, setBreeds] = useState<Breed[]>([])
@@ -24,17 +34,17 @@ function Breeds(): JSX.Element {
     }
   }
 
+  const listItems = useMemo(() => {
+    return breeds.map(breed => (
+      <BreedListItem key={breed.id} breed={breed} />
+    ))
+  }, [breeds])
+
   return (
     <div>
       <h1>Cat Breeds</h1>
       <ul>
-        {breeds.map(breed => (
-          <li key={breed.id}>
-            <Link to={`/breed-detail/${breed.id}`} state={{ breed }}>
-              {breed.name}
-            </Link>
-          </li>
-        ))}
+        {listItems}
       </ul>
     </div>
   )

@@ -1,4 +1,4 @@
-import { useState, useEffect, JSX } from 'react'
+import { useState, useEffect, JSX, useMemo } from 'react'
 import { useNavigate, useParams, useLocation, Location } from 'react-router-dom'
 import Modal from '../components/Modal'
 import { CatImage } from '../api/types'
@@ -65,8 +65,13 @@ function ImageView(): JSX.Element {
 		addFavorite(img)
 	}
 
+	const errorMessage = useMemo(() => 
+		(error ?? !selectedImage) ? 'Error loading image' : undefined,
+		[error, selectedImage]
+	)
+
 	return (
-		<Modal onClose={closeModal} isLoading={isLoading} error={(error ?? !selectedImage) ? 'Error loading image' : undefined}>
+		<Modal onClose={closeModal} isLoading={isLoading} error={errorMessage}>
 			{selectedImage && <>
 			<img src={selectedImage.url} alt="cat" className="w-full" />
 			{selectedImage.breeds && selectedImage.breeds.length > 0 ? (
