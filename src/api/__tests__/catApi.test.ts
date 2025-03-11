@@ -6,7 +6,8 @@ import { parseCatImages, parseBreeds } from '../parsers'
 vi.mock('axios')
 
 const mockedAxios = vi.mocked(axios, { deep: true })
-const mockedAxiosGet = mockedAxios.get
+const mockedAxiosGet = vi.fn()
+mockedAxios.get = mockedAxiosGet
 
 describe('catApi', () => {
   const mockData = [

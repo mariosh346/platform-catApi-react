@@ -30,10 +30,8 @@ describe('parseCatImages', () => {
     expect(parseCatImages(data)[0].breeds).toBeUndefined()
   })
 
-  it('should throw an error if the data is not an array', () => {
-    expect(() => parseCatImages({})).toThrowError(
-      'Invalid data: Expected an array for CatImages',
-    )
+  it('should return empty array  if the data is not an array', () => {
+    expect(parseCatImages({})).toEqual([])
   })
 
   it('should throw an error if the data is missing required properties', () => {
@@ -56,10 +54,8 @@ describe('parseBreeds', () => {
     expect(parseBreeds(breedData)).toEqual(breedData)
   })
 
-  it('should throw an error if the data is not an array', () => {
-    expect(() => parseBreeds({})).toThrowError(
-      'Invalid data: Expected an array for Breeds',
-    )
+  it('should return empty array if the data is not an array', () => {
+    expect(parseBreeds({})).toEqual([])
   })
 
   it('should throw an error if the data is missing required properties', () => {
