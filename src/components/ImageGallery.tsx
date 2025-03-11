@@ -10,12 +10,17 @@ const ImageGallery = ({ images }: ImageGalleryProps): JSX.Element => {
   return (
     <div className="flex flex-wrap">
       {images.map(img => (
-        <Link to={`/image/${img.id}`} key={img.id} className='m-3'>
-            <img 
-                src={img.url} 
-                alt="cat"
-                className='w-48 h-48'
-            />
+        <Link 
+          to={`/image/${img.id}`} 
+          key={img.id} 
+          state={{ image: img }} 
+          className='m-3'
+        >
+          <img 
+              src={img.url} 
+              alt="cat"
+              className='w-48 h-48'
+          />
         </Link>
       ))}
     </div>

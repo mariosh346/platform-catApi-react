@@ -1,25 +1,32 @@
 import { useState, useEffect, JSX } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams, useLocation, Location } from 'react-router-dom'
 import Modal from '../components/Modal'
 import { CatImage } from '../api/types'
 import { useFavorites } from '../hooks/useFavorites'
-import useFetchedImages from '../hooks/useFetchedImages'
+import { parseCatImages } from '../api/parsers'
 
 function ImageView(): JSX.Element {
 	const [selectedImage, setSelectedImage] = useState<CatImage | null>(null)
-	const { images } = useFetchedImages()
 	const navigate = useNavigate()
-	const { imageId } = useParams()  // use route parameter
+	const location: Location<unknown> = useLocation()
+	const { imageId } = useParams()
 	const { addFavorite } = useFavorites()
 
 	useEffect(() => {
-		if (imageId && images.length > 0) {
-			const img = images.find(i => i.id === imageId)
-			if (img) {
-				setSelectedImage(img)
-			}
+		const imageUnParsed = (typeof location.state === 'object' 
+			&& location.state 
+			&& 'image' in location.state)
+				? location.state.image 
+				: undefined
+
+		try {
+			const [image] = parseCatImages([imageUnParsed])
+			setSelectedImage(image)
+		} catch (error) {
+			console.error('Invalid image data:', error)
+			void navigate('/')
 		}
-	}, [imageId, images])
+	}, [location.state, navigate])
 
 	const closeModal = () => {
 		void navigate('/')
@@ -42,7 +49,10 @@ function ImageView(): JSX.Element {
 			) : (
 				<p>No breed info available</p>
 			)}
-			<button type="button" onClick={() => { markAsFavourite(selectedImage) }}>
+			<button 
+				type="button" 
+				onClick={() => { markAsFavourite(selectedImage) }}
+			>
 				Mark as Favourite
 			</button>
 		</Modal>
