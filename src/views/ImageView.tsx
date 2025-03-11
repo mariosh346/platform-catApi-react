@@ -13,7 +13,7 @@ function ImageView(): JSX.Element {
 	const navigate = useNavigate()
 	const location: Location<unknown> = useLocation()
 	const { imageId } = useParams()
-	const { addFavorite } = useFavorites()
+	const { addFavorite, removeFavorite, favorites } = useFavorites()
 
 	const fetchImageFromState = () => {
 		const imageFromState = typeof location.state === 'object' 
@@ -58,17 +58,26 @@ function ImageView(): JSX.Element {
 	}, [imageId])
 
 	const closeModal = () => {
-		void navigate('/')
+		void navigate(-1)
 	}
 
-	const markAsFavourite = (img: CatImage) => {
-		addFavorite(img)
-	}
+	const isFavorite = useMemo(() => 
+		selectedImage ? favorites.some(fav => fav.id === selectedImage.id) : false,
+		[selectedImage, favorites]
+	)
 
 	const errorMessage = useMemo(() => 
 		(error ?? !selectedImage) ? 'Error loading image' : undefined,
 		[error, selectedImage]
 	)
+	const clickFavoriteButton = (selectedImage: CatImage) => {
+		if (isFavorite) {
+			removeFavorite(selectedImage) }
+		else{
+			addFavorite(selectedImage)
+		}
+	}
+
 
 	return (
 		<Modal onClose={closeModal} isLoading={isLoading} error={errorMessage}>
@@ -84,9 +93,11 @@ function ImageView(): JSX.Element {
 			)}
 			<button 
 				type="button" 
-				onClick={() => { markAsFavourite(selectedImage) }}
+				onClick={() => {
+					clickFavoriteButton(selectedImage)
+				}}
 			>
-				Mark as Favourite
+				{isFavorite ? "Remove from Favourites" : "Mark as Favourite"}
 			</button>
 			</>}	
 		</Modal>

@@ -17,8 +17,8 @@ export function useFavorites() {
     localStorage.setItem('favorites', JSON.stringify(updatedFavorites))
   }
 
-  const removeFavorite = (id: string) => {
-    const newFavorites = favorites.filter(fav => fav.id !== id)
+  const removeFavorite = (img: CatImage) => {
+    const newFavorites = favorites.filter(fav => fav.id !== img.id)
     setFavorites(newFavorites)
     localStorage.setItem('favorites', JSON.stringify(newFavorites))
   }
