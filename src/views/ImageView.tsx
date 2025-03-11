@@ -7,7 +7,7 @@ import useFetchedImages from '../hooks/useFetchedImages'
 
 function ImageView(): JSX.Element {
 	const [selectedImage, setSelectedImage] = useState<CatImage | null>(null)
-	const [images] = useFetchedImages()
+	const { images } = useFetchedImages()
 	const navigate = useNavigate()
 	const { imageId } = useParams()  // use route parameter
 	const { addFavorite } = useFavorites()

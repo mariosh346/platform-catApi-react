@@ -1,4 +1,4 @@
-import React from 'react'
+import { JSX } from 'react'
 
 interface ModalProps {
   children: React.ReactNode
@@ -8,21 +8,14 @@ interface ModalProps {
 function Modal({ children, onClose }: ModalProps): JSX.Element {
   return (
     <div
-      style={{
-        position: 'fixed',
-        top: 0, left: 0, right: 0, bottom: 0,
-        backgroundColor: 'rgba(0,0,0,0.5)',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-      }}
+      className='fixed top-0 left-0 right-0 bottom-0 bg-black bg-opacity-100 flex justify-center items-center'
       onClick={onClose}
     >
       <div
-        style={{ backgroundColor: 'white', padding: 20, position: 'relative' }}
+        className='p-6 relative'
         onClick={e => { e.stopPropagation(); }}
       >
-        <button onClick={onClose} style={{ position: 'absolute', top: 10, right: 10 }}>X</button>
+      <button type="button" onClick={onClose} className="absolute top-3 right-3 p-3">X</button>
         {children}
       </div>
     </div>
