@@ -4,7 +4,7 @@ import { CatImage } from '../api/types'
 import useFetchedImages from '../hooks/useFetchedImages'
 
 function Home(): JSX.Element {
-  const [images, fetchImages, isLoading, error] = useFetchedImages()
+  const { images, fetchImages, isLoading, error } = useFetchedImages()
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -21,9 +21,9 @@ function Home(): JSX.Element {
       <h1>Random Cats</h1>
       {isLoading && <p>Loading...</p>}
       {error && <p className="text-red-500">{error}</p>}
-      {!isLoading && <div>
+      {!isLoading && images.length && <div>
         <div className="flex flex-wrap">
-          {images?.map(img => (
+          {images.map(img => (
             <img
               key={img.id}
               src={img.url}

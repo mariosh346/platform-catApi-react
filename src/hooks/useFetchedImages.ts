@@ -4,7 +4,7 @@ import { CatImage } from '../api/types'
 import { parseCatImages } from '../api/parsers'
 
 const useFetchedImages = () => {
-  const [images, setImages] = useState<CatImage[] | undefined>(() => {
+  const [images, setImages] = useState<CatImage[]>(() => {
     const stored = localStorage.getItem('fetchedImages')
     return stored ? parseCatImages(JSON.parse(stored)) : []
   })
@@ -30,7 +30,7 @@ const useFetchedImages = () => {
     localStorage.setItem('fetchedImages', JSON.stringify(images))
   }, [images])
 
-  return [images, fetchImages, isLoading, error] as const
+  return { images, fetchImages, isLoading, error }
 }
 
 export default useFetchedImages
