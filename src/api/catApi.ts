@@ -18,3 +18,8 @@ export const getBreedImages = async (breedId: string, limit = 10): Promise<CatIm
   const res = await axios.get(`${BASE_URL}/images/search?breed_ids=${breedId}&limit=${limit.toString()}`)
   return parseCatImages(res.data)
 }
+
+export const getImageById = async (imageId: string): Promise<CatImage> => {
+  const res = await axios.get(`${BASE_URL}/images/${imageId}`)
+  return parseCatImages([res.data])[0]
+}

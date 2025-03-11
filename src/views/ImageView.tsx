@@ -4,29 +4,58 @@ import Modal from '../components/Modal'
 import { CatImage } from '../api/types'
 import { useFavorites } from '../hooks/useFavorites'
 import { parseCatImages } from '../api/parsers'
+import { getImageById } from '../api/catApi'
 
 function ImageView(): JSX.Element {
 	const [selectedImage, setSelectedImage] = useState<CatImage | null>(null)
+	const [isLoading, setIsLoading] = useState(true)
+	const [error, setError] = useState<string | null>(null)
 	const navigate = useNavigate()
 	const location: Location<unknown> = useLocation()
 	const { imageId } = useParams()
 	const { addFavorite } = useFavorites()
 
-	useEffect(() => {
-		const imageUnParsed = (typeof location.state === 'object' 
+	const fetchImageFromState = () => {
+		const imageFromState = typeof location.state === 'object' 
 			&& location.state 
-			&& 'image' in location.state)
-				? location.state.image 
-				: undefined
+			&& 'image' in location.state
+			? location.state.image 
+			: undefined
 
+		if (imageFromState) {
+			try {
+				const [image] = parseCatImages([imageFromState])
+				setSelectedImage(image)
+				return
+			} catch (error) {
+				console.error('Invalid state data:', error)
+			}
+		}
+	}
+	
+	const fetchImageFromApi = async (imageId: string) => {
 		try {
-			const [image] = parseCatImages([imageUnParsed])
+			const image = await getImageById(imageId)
 			setSelectedImage(image)
-		} catch (error) {
-			console.error('Invalid image data:', error)
+		} catch (err) {
+			console.error('Failed to fetch image:', err)
+			setError('Failed to load image')
 			void navigate('/')
 		}
-	}, [location.state, navigate])
+	}
+	const fetchImage = async () => {
+		if (!imageId) return
+		setIsLoading(true)
+		fetchImageFromState()
+		if (!selectedImage)  {
+			await fetchImageFromApi(imageId)
+		}
+		setIsLoading(false)
+	}
+
+	useEffect(() => {
+		void fetchImage()
+	}, [imageId])
 
 	const closeModal = () => {
 		void navigate('/')
@@ -36,10 +65,9 @@ function ImageView(): JSX.Element {
 		addFavorite(img)
 	}
 
-	if (!selectedImage) return <div>Loading...</div>
-
 	return (
-		<Modal onClose={closeModal}>
+		<Modal onClose={closeModal} isLoading={isLoading} error={(error ?? !selectedImage) ? 'Error loading image' : undefined}>
+			{selectedImage && <>
 			<img src={selectedImage.url} alt="cat" className="w-full" />
 			{selectedImage.breeds && selectedImage.breeds.length > 0 ? (
 				<>
@@ -55,6 +83,7 @@ function ImageView(): JSX.Element {
 			>
 				Mark as Favourite
 			</button>
+			</>}	
 		</Modal>
 	)
 }
