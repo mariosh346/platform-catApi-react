@@ -36,9 +36,8 @@ function BreedDetail(): JSX.Element {
     } catch (err) {
       console.error('Failed to fetch image:', err)
       setError('Failed to load image')
-      void navigate('/')
     }
-  }, [navigate])
+  }, [])
 
 
   useEffect(() => {

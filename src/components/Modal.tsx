@@ -9,8 +9,8 @@ interface ModalProps {
 
 function Modal({ children, onClose, isLoading, error }: ModalProps): JSX.Element {
   const renderLoadingOrError = () => {
-    if  (isLoading) return <p className='text-white text-center mt-4'>Loading...</p>
-    if  (error) return <p className='text-red-500 text-center mt-4'>{error}</p>
+    if  (isLoading) return <p className='text-white text-center m-8'>Loading...</p>
+    if  (error) return <p className='text-red-500 text-center m-8'>{error}</p>
   }
   return (
     <div
@@ -18,7 +18,7 @@ function Modal({ children, onClose, isLoading, error }: ModalProps): JSX.Element
       onClick={onClose}
     >
       <div
-        className='p-6 relative'
+        className='p-6 relative max-h-screen overflow-y-auto'
         onClick={e => { e.stopPropagation(); }}
       >
       <button type="button" onClick={onClose} className="absolute top-3 right-3 p-3">X</button>
