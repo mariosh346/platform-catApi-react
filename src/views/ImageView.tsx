@@ -1,4 +1,4 @@
-import { useState, useEffect, JSX, useMemo } from 'react'
+import { useState, useEffect, JSX, useMemo, useCallback } from 'react'
 import { useNavigate, useParams, useLocation, Location } from 'react-router-dom'
 import Modal from '../components/Modal'
 import { CatImage } from '../api/types'
@@ -15,7 +15,7 @@ function ImageView(): JSX.Element {
 	const { imageId } = useParams()
 	const { addFavorite, removeFavorite, favorites } = useFavorites()
 
-	const fetchImageFromState = () => {
+	const fetchImageFromState = useCallback(() => {
 		const imageFromState = typeof location.state === 'object' 
 			&& location.state 
 			&& 'image' in location.state
@@ -31,9 +31,9 @@ function ImageView(): JSX.Element {
 				console.error('Invalid state data:', error)
 			}
 		}
-	}
+	},[location.state])
 	
-	const fetchImageFromApi = async (imageId: string) => {
+	const fetchImageFromApi = useCallback(async (imageId: string) => {
 		try {
 			const image = await getImageById(imageId)
 			setSelectedImage(image)
@@ -42,8 +42,9 @@ function ImageView(): JSX.Element {
 			setError('Failed to load image')
 			void navigate('/')
 		}
-	}
-	const fetchImage = async () => {
+	}, [navigate])
+
+	const fetchImage = useCallback(async () => {
 		if (!imageId) return
 		setIsLoading(true)
 		fetchImageFromState()
@@ -51,11 +52,11 @@ function ImageView(): JSX.Element {
 			await fetchImageFromApi(imageId)
 		}
 		setIsLoading(false)
-	}
+	}, [fetchImageFromApi, fetchImageFromState, imageId])
 
 	useEffect(() => {
 		void fetchImage()
-	}, [imageId])
+	}, [imageId, fetchImage])
 
 	const closeModal = () => {
 		void navigate(-1)
