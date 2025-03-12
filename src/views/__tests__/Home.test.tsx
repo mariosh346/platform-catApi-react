@@ -1,24 +1,27 @@
 import { act, render } from '@testing-library/react'
-import { BrowserRouter } from 'react-router-dom'
-import { describe, expect, it, vi } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import Home from '../Home'
 import * as catApi from '../../api/catApi'
 
 
 describe('Home', () => {
-  it('should call getRandomImages once on mount', () => {
-    const mockGetRandomImages = vi.spyOn(catApi, 'getRandomImages')
-    mockGetRandomImages.mockResolvedValue([])
+  const mockGetRandomImages = vi.spyOn(catApi, 'getRandomImages')
+  mockGetRandomImages.mockResolvedValue([])
+  let rendered: ReturnType<typeof render>;
 
+  beforeEach(() => {
     act(() => {
-      render(
-        <BrowserRouter>
+      rendered = render(
           <Home />
-        </BrowserRouter>
-      )
-    })
+      );
+    });
+  })
 
+  it('should call getRandomImages once on mount', () => {
     expect(mockGetRandomImages).toHaveBeenCalledTimes(1)
     expect(mockGetRandomImages).toHaveBeenCalledWith(10)
+  })
+  it('should have the same snapshot as befoere', () => {
+    expect(rendered.baseElement).toMatchSnapshot()
   })
 })

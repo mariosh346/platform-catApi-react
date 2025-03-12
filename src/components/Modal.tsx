@@ -21,7 +21,7 @@ function Modal({ children, onClose, isLoading, error }: ModalProps): JSX.Element
         className='p-6 relative max-h-screen overflow-y-auto'
         onClick={e => { e.stopPropagation(); }}
       >
-      <button type="button" onClick={onClose} className="absolute top-3 right-3 p-3">X</button>
+        <button type="button" onClick={onClose} className="absolute top-3 right-3 p-3">X</button>
         {renderLoadingOrError() ?? children}
       </div>
     </div>

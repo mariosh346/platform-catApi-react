@@ -25,7 +25,7 @@ const MemoizedImageItem = memo(({ image, renderAfterImage }: { image: CatImage, 
 
 const ImageGallery = ({ images, renderAfterImage }: ImageGalleryProps): JSX.Element => {
   return (
-    <div className="flex flex-wrap">
+    <div className="flex flex-wrap justify-center">
       {images.map(image => (
         <MemoizedImageItem key={image.id} image={image} renderAfterImage={renderAfterImage} />
       ))}
