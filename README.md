@@ -68,6 +68,14 @@ Run Cypress tests:
 pnpm cypress
 ```
 
+## Deployment
+
+To deploy the project to GitHub Pages, run the following command:
+
+```sh
+pnpm deploy
+```
+
 ## Tech Stack
 
 - React
