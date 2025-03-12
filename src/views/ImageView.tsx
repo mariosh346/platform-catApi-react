@@ -52,6 +52,8 @@ function ImageView(): JSX.Element {
 			await fetchImageFromApi(imageId)
 		}
 		setIsLoading(false)
+	// this sets selectedImage, so it cannot rely on this
+	// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [fetchImageFromApi, fetchImageFromState, imageId])
 
 	useEffect(() => {

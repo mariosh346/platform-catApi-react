@@ -8,6 +8,8 @@ function Home(): JSX.Element {
   useEffect(() => {
     if (isLoading) return
     void fetchImages()
+  // we only want to fetch new images when the component mounts
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (
@@ -19,10 +21,10 @@ function Home(): JSX.Element {
         <ImageGallery images={images} />
         <button 
           type="button" 
-          onClick={() => { void fetchImages() }}
+          onClick={() => { void fetchImages(false) }}
           disabled={isLoading}
         >
-          Load New
+          Load More
         </button>
       </div>}
     </div>

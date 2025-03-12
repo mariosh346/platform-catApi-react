@@ -11,13 +11,13 @@ const useFetchedImages = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  const fetchImages = useCallback(async () => {
+  const fetchImages = useCallback(async (reset = true) => {
     if (isLoading) return
     setIsLoading(true)
     setError(null)
     try {
-      const data = await getRandomImages(10)
-      setImages(data)
+      const newImages = await getRandomImages(10)
+      setImages(prev => reset ? newImages : [...prev, ...newImages])
     } catch (err) {
       console.error(err)
       setError('Failed to fetch images')
