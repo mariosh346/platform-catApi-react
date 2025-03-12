@@ -15,9 +15,7 @@ function Home(): JSX.Element {
   return (
     <div>
       <h1>Random Cats</h1>
-      {isLoading && <p>Loading...</p>}
-      {error && <p className="text-red-500">{error}</p>}
-      {!isLoading && images.length && <div>
+      {images.length && <div>
         <ImageGallery images={images} />
         <button 
           type="button" 
@@ -27,6 +25,8 @@ function Home(): JSX.Element {
           Load More
         </button>
       </div>}
+      {isLoading && <p>Loading...</p>}
+      {error && <p className="text-red-500">{error}</p>}
     </div>
   )
 }
