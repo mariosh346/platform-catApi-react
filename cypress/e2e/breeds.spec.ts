@@ -11,7 +11,6 @@ describe('Breeds Page', () => {
     cy.get('ul li').its('length').should('be.gt', 0)
   })
 
-  // New test: clicking on a breed navigates to breed detail view
   it('navigates to breed detail on breed click', () => {
     cy.get('ul li').first().click();
     cy.url().should('include', '/breed-detail/');

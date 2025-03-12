@@ -8,13 +8,10 @@ describe('Home Page', () => {
   });
 
   it('loads images and shows the "Load New" button', () => {
-    // Check that at least one image is rendered
     cy.get('img').should('have.length.greaterThan', 0);
-    // Check for the existence of the load button
     cy.get('button').contains('Load New').should('exist');
   });
 
-  // New test: clicking on an image navigates to image detail view
   it('navigates to image detail on image click', () => {
     cy.get('img').first().click();
     cy.url().should('include', '/image/');
