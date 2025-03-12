@@ -19,3 +19,58 @@ We give you a lot of freedom in technologies and ways of doing things. We only i
 
 Once you have built your app, share your code in the mean suits you best
 Good luck, potential colleague!
+
+# Platform Cat Api React Solution
+
+## Prerequisites
+- nvm (Node Version Manager) or Node v22
+
+## Setup
+
+1. Clone the repository:
+```bash
+git clone https://github.com/mariosh346/platform-catApi-react.git
+cd platform-catApi-react
+```
+
+2. Install Node.js using nvm:
+```bash
+nvm install 22
+nvm use 22
+```
+
+3. Install pnpm:
+```bash
+npm install -g pnpm
+```
+
+4. Install dependencies using pnpm:
+```bash
+pnpm install
+```
+
+## Running the Application
+
+- Start the development server:
+```bash
+pnpm dev
+```
+
+- Build for production:
+```bash
+pnpm build
+```
+
+## Testing
+
+Run Cypress tests:
+```bash
+pnpm cypress
+```
+
+## Tech Stack
+
+- React
+- TypeScript
+- Vite
+- Cypress
