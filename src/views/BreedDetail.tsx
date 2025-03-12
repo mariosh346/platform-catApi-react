@@ -1,42 +1,56 @@
-import { useEffect, useState, JSX } from 'react'
+import { useEffect, useState, JSX, useCallback, useMemo } from 'react'
 import { useLocation, useNavigate, useParams, Location } from 'react-router-dom'
 import Modal from '../components/Modal'
-import { getBreedImages } from '../api/catApi'
+import { getBreedById, getBreedImages } from '../api/catApi'
 import ImageGallery from '../components/ImageGallery'
 import { parseBreed } from '../api/parsers'
-
-interface Breed {
-  id: string
-  name: string
-  description: string
-}
-
-interface CatImage {
-  id: string
-  url: string
-}
+import { Breed, CatImage } from '../api/types'
 
 function BreedDetail(): JSX.Element {
   const location: Location<unknown> = useLocation()
   const navigate = useNavigate()
   const { breedId } = useParams<{ breedId: string }>()
   const [breedImages, setBreedImages] = useState<CatImage[]>([])
-  const breedUnParsed: unknown = typeof location.state === 'object'&& location.state && 'breed' in location.state
-   ? location.state.breed : undefined
+  const [isLoading, setIsLoading] = useState(true)
+	const [error, setError] = useState<string | null>(null)
+  const [breed, setBreed] = useState<Breed | null>(null);
+  const navigateBreeds = useCallback(() => navigate('/breeds'), [navigate])
 
-  let breed: Breed | undefined;
-  const navigateBreeds = () => navigate('/breeds')
-  try {
-    breed = parseBreed(breedUnParsed)
-  } catch {
-    void navigateBreeds()
-  }
+  const fetchBreedFromState = useCallback(() => {
+    const breedUnParsed: unknown = (typeof location.state === 'object'
+    && location.state && 'breed' in location.state)
+      ? location.state.breed
+      : undefined
+    if (breedUnParsed) {
+    try {
+      setBreed(parseBreed(breedUnParsed))
+    } catch {
+      console.error('Invalid state data:')
+    }}
+  }, [location.state])
+
+  const fetchBreedFromApi = useCallback(async (id: string) => {
+    try {
+      const breed = await getBreedById(id)
+      setBreed(breed)
+    } catch (err) {
+      console.error('Failed to fetch image:', err)
+      setError('Failed to load image')
+      void navigate('/')
+    }
+  }, [navigate])
+
 
   useEffect(() => {
+    if (!breedId) return
+		setIsLoading(true)
+    fetchBreedFromState()
     if (breedId) {
       void fetchBreedImages(breedId)
+      void fetchBreedFromApi(breedId)
     }
-  }, [breedId])
+    setIsLoading(false)
+  }, [breedId, fetchBreedFromApi, fetchBreedFromState])
 
   const fetchBreedImages = async (breedId: string) => {
     try {
@@ -51,13 +65,18 @@ function BreedDetail(): JSX.Element {
     void navigateBreeds()
   }
 
-  if (!breed) return <></>
+  const errorMessage = useMemo(() => 
+      (error ?? !breed) ? 'Error loading breed' : undefined,
+      [error, breed]
+    )
 
   return (
-    <Modal onClose={closeModal}>
-      <h1>{breed.name}</h1>
-      <p>{breed.description}</p>
-      <ImageGallery images={breedImages} />
+    <Modal onClose={closeModal} isLoading={isLoading} error={errorMessage}>
+      {breed && <>
+        <h1>{breed.name}</h1>
+        <p>{breed.description}</p>
+        <ImageGallery images={breedImages} />
+      </>}
     </Modal>
   )
 }
