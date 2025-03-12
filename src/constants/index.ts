@@ -1,0 +1,1 @@
+export const BASENAME_ROUTE = process.env.NODE_ENV === 'production' ? '/platform-catApi-react/' : '/';

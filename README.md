@@ -21,6 +21,7 @@ Once you have built your app, share your code in the mean suits you best
 Good luck, potential colleague!
 
 # Platform Cat Api React Solution
+Check the live site on GitHub Pages at https://mariosh346.github.io/platform-catApi-react/
 
 ## Prerequisites
 - nvm (Node Version Manager) or Node v22
@@ -75,6 +76,8 @@ To deploy the project to GitHub Pages, run the following command:
 ```sh
 pnpm deploy
 ```
+
+Note: Once deployed, check the live site on GitHub Pages at https://mariosh346.github.io/platform-catApi-react/
 
 ## Tech Stack
 
