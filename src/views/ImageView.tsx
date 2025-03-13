@@ -85,7 +85,7 @@ function ImageView(): JSX.Element {
 	return (
 		<Modal onClose={closeModal} isLoading={isLoading} error={errorMessage}>
 			{selectedImage && <>
-			<img src={selectedImage.url} alt="cat" className="w-full" />
+			<img src={selectedImage.url} alt="cat" />
 			{selectedImage.breeds && selectedImage.breeds.length > 0 ? (
 				<>
 					<h3>{selectedImage.breeds[0].name}</h3>

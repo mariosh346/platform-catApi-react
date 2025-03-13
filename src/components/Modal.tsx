@@ -14,7 +14,7 @@ function Modal({ children, onClose, isLoading, error }: ModalProps): JSX.Element
   }
   return (
     <div
-      className='fixed top-0 left-0 right-0 bottom-0 bg-black bg-opacity-100 flex justify-center items-center'
+      className='fixed top-0 left-0 right-0 bottom-0 bg-black bg-opacity-100 flex justify-center items-center text-blue-500'
       onClick={onClose}
     >
       <div
