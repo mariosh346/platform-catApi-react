@@ -1,0 +1,5 @@
+export const loadHome = () => import('./views/Home')
+export const loadImageView = () => import('./views/ImageView')
+export const loadFavorites = () => import('./views/Favorites')
+export const loadBreeds = () => import('./views/Breeds')
+export const loadBreedDetail = () => import('./views/BreedDetail')

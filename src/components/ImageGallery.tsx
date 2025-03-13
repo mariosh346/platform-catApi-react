@@ -12,6 +12,7 @@ const MemoizedImageItem = memo(({ image, renderAfterImage }: { image: CatImage, 
     <Link 
         to={`/image/${image.id}`} 
         state={{ image }} 
+        onMouseEnter={() => void import('../views/ImageView')}
     >
         <img 
         src={image.url} 

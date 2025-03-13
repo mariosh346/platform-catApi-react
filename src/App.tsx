@@ -1,35 +1,45 @@
 import { Routes, Route, Link } from 'react-router-dom'
-import Home from './views/Home'
-import ImageView from './views/ImageView'
+import { lazy, Suspense } from 'react'
 import './App.css'
-import Favorites from './views/Favorites'
-import Breeds from './views/Breeds'
-import BreedDetail from './views/BreedDetail'
+
+const loadHome = () => import('./views/Home')
+const loadImageView = () => import('./views/ImageView')
+const loadFavorites = () => import('./views/Favorites')
+const loadBreeds = () => import('./views/Breeds')
+const loadBreedDetail = () => import('./views/BreedDetail')
+
+const Home = lazy(loadHome)
+const ImageView = lazy(loadImageView)
+const Favorites = lazy(loadFavorites)
+const Breeds = lazy(loadBreeds)
+const BreedDetail = lazy(loadBreedDetail)
 
 function App() {
   return (
     <div>
       <nav>
-        <Link to="/">
+        <Link to="/" onMouseEnter={() => void loadHome()}>
           Home
         </Link>
         <span className='px-1'>|</span>
-        <Link to="/breeds">
+        <Link to="/breeds" onMouseEnter={() => void loadBreeds()}>
           Breeds
         </Link>
         <span className='px-1'>|</span>
-        <Link to="/favorites">
+        <Link to="/favorites" onMouseEnter={() => void loadFavorites()}>
           Favorites
         </Link>
       </nav>
-    
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/image/:imageId" element={<ImageView />} />
-        <Route path="/breeds" element={<Breeds />} />
-        <Route path="/breed-detail/:breedId" element={<BreedDetail />} />
-        <Route path="/favorites" element={<Favorites />} />
-      </Routes>
+      
+      <Suspense fallback={<div>Loading...</div>}>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/image/:imageId" element={<ImageView />} />
+          <Route path="/breeds" element={<Breeds />} />
+          <Route path="/breed-detail/:breedId" element={<BreedDetail />} />
+          <Route path="/favorites" element={<Favorites />} />
+        </Routes>
+      </Suspense>
     </div>
   )
 }

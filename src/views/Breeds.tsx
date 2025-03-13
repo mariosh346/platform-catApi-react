@@ -11,7 +11,7 @@ interface Breed {
 const BreedListItem = memo(({ breed }: { breed: Breed }) => {
   return (
     <li>
-      <Link to={`/breed-detail/${breed.id}`} state={{ breed }}>
+      <Link to={`/breed-detail/${breed.id}`} state={{ breed }} onMouseEnter={() => void import('./BreedDetail')}>
         {breed.name}
       </Link>
     </li>
