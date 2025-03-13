@@ -82,8 +82,6 @@ Note: Once deployed, check the live site on GitHub Pages at https://mariosh346.g
 ## Next steps
 
 - Add state management like redux
-- Use useQuery for caching apis
-- Make components async for better load speed
 
 
 ## Tech Stack
