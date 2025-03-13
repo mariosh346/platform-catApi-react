@@ -82,7 +82,7 @@ Note: Once deployed, check the live site on GitHub Pages at https://mariosh346.g
 ## Next steps
 
 - Add state management like redux
-
+- Introduce small reusable components like Button, Link
 
 ## Tech Stack
 
