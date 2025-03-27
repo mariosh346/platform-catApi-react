@@ -16,7 +16,7 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
       - name: Run Composite Action
-        uses: ./.github/actions/setup.yml
+        uses: ./.github/actions/setup
       - name: Run Vitest Tests
         run: pnpm test
 
@@ -26,7 +26,7 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
       - name: Run Composite Action
-        uses: ./.github/actions/setup.yml
+        uses: ./.github/actions/setup
       - name: Run Cypress Tests
         run: pnpm cypress:run
 
@@ -37,7 +37,7 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
       - name: Run Composite Action
-        uses: ./.github/actions/setup.yml
+        uses: ./.github/actions/setup
       - name: Deploy to GitHub Pages
         run: pnpm deploy
         env:
