@@ -10,14 +10,6 @@ permissions:
   contents: read
 
 jobs:
-  setup:
-    runs-on: &runs_on ubuntu-latest
-    steps:
-      - &default-checkout
-        - name: Checkout Repository
-          uses: actions/checkout@v3
-        - name: Setup Environment
-          run: bash scripts/setup.sh
   vitest:
     runs-on: ubuntu-latest
     steps:
