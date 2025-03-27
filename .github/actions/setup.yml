@@ -1,0 +1,8 @@
+name: "My Composite Action"
+description: "Runs shared setup commands for CI jobs"
+inputs: {}
+runs:
+  using: "composite"
+  steps:
+    - name: Setup Environment
+      run: bash scripts/setup.sh
