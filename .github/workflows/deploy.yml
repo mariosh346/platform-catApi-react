@@ -9,24 +9,25 @@ on:
 permissions:
   contents: read
 
+# Define a common anchor for the checkout step
+x-checkout: &default-checkout
+  - name: Checkout Repository
+    uses: actions/checkout@v3
+  - name: Setup Environment
+    run: bash scripts/setup.sh
+
 jobs:
   vitest:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v3
-      - name: Run Composite Action
-        uses: ./.github/actions/setup
+      - *default-checkout
       - name: Run Vitest Tests
         run: pnpm test
 
   cypress:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v3
-      - name: Run Composite Action
-        uses: ./.github/actions/setup
+      - *default-checkout
       - name: Run Cypress Tests
         run: pnpm cypress:run
 
@@ -34,10 +35,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [vitest, cypress]
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v3
-      - name: Run Composite Action
-        uses: ./.github/actions/setup
+      - *default-checkout
       - name: Deploy to GitHub Pages
         run: pnpm deploy
         env:
