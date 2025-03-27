@@ -1,0 +1,46 @@
+name: CI & Deploy
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+# Define common steps as an anchor
+x-common-steps: &common-steps
+  - name: Checkout Repository
+    uses: actions/checkout@v3
+  - name: Setup Node.js
+    uses: actions/setup-node@v3
+    with:
+      node-version: '22'
+      cache: 'pnpm'
+  - name: Setup Environment
+    run: bash scripts/setup.sh
+
+jobs:
+  vitest:
+    runs-on: ubuntu-latest
+    steps:
+      <<: *common-steps
+      - name: Run Vitest Tests
+        run: pnpm test
+
+  cypress:
+    runs-on: ubuntu-latest
+    steps:
+      <<: *common-steps
+      - name: Run Cypress Tests
+        run: pnpm cypress:run
+
+  build-deploy:
+    runs-on: ubuntu-latest
+    needs: [vitest, cypress]
+    steps:
+      <<: *common-steps
+      - name: Build Application
+        run: pnpm build
+      - name: Deploy to GitHub Pages
+        run: pnpm deploy
+        env:
+          GHPAGES_TOKEN: ${{ secrets.GHPAGES_TOKEN }}
