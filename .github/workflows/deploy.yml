@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: checkout repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
     - name: setup environment
       run: bash scripts/setup.sh
     - name: Run Vitest Tests
@@ -24,18 +24,21 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: setup environment
         run: bash scripts/setup.sh
-      - name: Run Cypress Tests
-        run: pnpm cypress:run
+      - name: Cypress run
+        uses: cypress-io/github-action@v6
+        with:
+          build: pnpm build
+          start: pnpm start
 
   build-deploy:
     runs-on: ubuntu-latest
     needs: [vitest, cypress]
     steps:
       - name: checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: setup environment
         run: bash scripts/setup.sh
       - name: Deploy to GitHub Pages
