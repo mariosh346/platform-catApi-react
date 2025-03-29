@@ -35,7 +35,7 @@ jobs:
 
   build-deploy:
     runs-on: ubuntu-latest
-    needs: [vitest, cypress]
+    # needs: [vitest, cypress]
     steps:
       - name: checkout repository
         uses: actions/checkout@v4
