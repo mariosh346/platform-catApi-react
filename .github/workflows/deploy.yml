@@ -27,6 +27,8 @@ jobs:
         uses: actions/checkout@v4
       - name: setup environment
         run: bash scripts/setup.sh
+      - name: Install Cypress Binary
+        run: npx cypress install
       - name: Cypress run
         uses: cypress-io/github-action@v6
         with:
