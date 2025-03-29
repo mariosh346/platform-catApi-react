@@ -42,6 +42,6 @@ jobs:
       - name: setup environment
         run: bash scripts/setup.sh
       - name: Deploy to GitHub Pages
-        run: pnpm deploy
+        run: pnpm run deploy
         env:
           GHPAGES_TOKEN: ${{ secrets.GHPAGES_TOKEN }}
