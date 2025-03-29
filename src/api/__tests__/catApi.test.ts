@@ -1,13 +1,11 @@
 import { describe, it, expect, vi, afterEach } from 'vitest'
-import axios from 'axios'
 import { getRandomImages, getBreeds, getBreedImages, getImageById, getBreedById } from '../catApi'
 import { parseCatImages, parseBreeds } from '../parsers'
+import { setupCache } from 'axios-cache-interceptor'
 
-vi.mock('axios')
-
-const mockedAxios = vi.mocked(axios, { deep: true })
+vi.mock('axios-cache-interceptor', () => ({setupCache: vi.fn()}))
 const mockedAxiosGet = vi.fn()
-mockedAxios.get = mockedAxiosGet
+vi.mocked(setupCache).mockReturnValue({get: mockedAxiosGet})
 
 describe('catApi', () => {
   const mockData = [
@@ -30,17 +28,17 @@ describe('catApi', () => {
 
   describe('getRandomImages', () => {
     it('should call the correct API endpoint', async () => {
-      mockedAxios.get.mockResolvedValue({ data: mockData })
+      mockedAxiosGet.mockResolvedValue({ data: mockData })
 
       await getRandomImages()
 
       expect(mockedAxiosGet).toHaveBeenCalledWith(
-        'https://api.thecatapi.com/v1/images/search?limit=10',
+        '/images/search?limit=10',
       )
     })
 
     it('should return an array of cat images', async () => {
-      mockedAxios.get.mockResolvedValue({ data: mockData })
+      mockedAxiosGet.mockResolvedValue({ data: mockData })
 
       const images = await getRandomImages()
 
@@ -48,7 +46,7 @@ describe('catApi', () => {
     })
 
     it('should handle errors', async () => {
-      mockedAxios.get.mockRejectedValue(new Error('Failed to fetch'))
+      mockedAxiosGet.mockRejectedValue(new Error('Failed to fetch'))
 
       await expect(getRandomImages()).rejects.toThrow('Failed to fetch')
     })
@@ -56,7 +54,7 @@ describe('catApi', () => {
 
   describe('getBreeds', () => {
     it('should call the correct API endpoint', async () => {
-      mockedAxios.get.mockResolvedValue({
+      mockedAxiosGet.mockResolvedValue({
         data: [
           {
             id: 'b1',
@@ -69,7 +67,7 @@ describe('catApi', () => {
       await getBreeds()
 
       expect(mockedAxiosGet).toHaveBeenCalledWith(
-        'https://api.thecatapi.com/v1/breeds',
+        '/breeds',
       )
     })
 
@@ -81,7 +79,7 @@ describe('catApi', () => {
           description: 'Description 1',
         },
       ]
-      mockedAxios.get.mockResolvedValue({ data: breedData })
+      mockedAxiosGet.mockResolvedValue({ data: breedData })
 
       const breeds = await getBreeds()
 
@@ -89,7 +87,7 @@ describe('catApi', () => {
     })
 
     it('should handle errors', async () => {
-      mockedAxios.get.mockRejectedValue(new Error('Failed to fetch'))
+      mockedAxiosGet.mockRejectedValue(new Error('Failed to fetch'))
 
       await expect(getBreeds()).rejects.toThrow('Failed to fetch')
     })
@@ -97,17 +95,17 @@ describe('catApi', () => {
 
   describe('getBreedImages', () => {
     it('should call the correct API endpoint', async () => {
-      mockedAxios.get.mockResolvedValue({ data: mockData })
+      mockedAxiosGet.mockResolvedValue({ data: mockData })
 
       await getBreedImages('b1')
 
       expect(mockedAxiosGet).toHaveBeenCalledWith(
-        'https://api.thecatapi.com/v1/images/search?breed_ids=b1&limit=10',
+        '/images/search?breed_ids=b1&limit=10',
       )
     })
 
     it('should return an array of cat images for a specific breed', async () => {
-      mockedAxios.get.mockResolvedValue({ data: mockData })
+      mockedAxiosGet.mockResolvedValue({ data: mockData })
 
       const images = await getBreedImages('b1')
 
@@ -115,7 +113,7 @@ describe('catApi', () => {
     })
 
     it('should handle errors', async () => {
-      mockedAxios.get.mockRejectedValue(new Error('Failed to fetch'))
+      mockedAxiosGet.mockRejectedValue(new Error('Failed to fetch'))
 
       await expect(getBreedImages('b1')).rejects.toThrow('Failed to fetch')
     })
@@ -125,17 +123,17 @@ describe('catApi', () => {
     it('should call the correct API endpoint', async () => {
       const imageId = '2'
       const mockImage = { id: imageId, url: 'https://example.com/cat2.jpg' }
-      mockedAxios.get.mockResolvedValue({ data: mockImage })
+      mockedAxiosGet.mockResolvedValue({ data: mockImage })
 
       await getImageById(imageId)
 
-      expect(mockedAxiosGet).toHaveBeenCalledWith(`https://api.thecatapi.com/v1/images/${imageId}`)
+      expect(mockedAxiosGet).toHaveBeenCalledWith(`/images/${imageId}`)
     })
 
     it('should return a cat image', async () => {
       const imageId = '2'
       const mockImage = { id: imageId, url: 'https://example.com/cat2.jpg' }
-      mockedAxios.get.mockResolvedValue({ data: mockImage })
+      mockedAxiosGet.mockResolvedValue({ data: mockImage })
 
       const image = await getImageById(imageId)
 
@@ -144,7 +142,7 @@ describe('catApi', () => {
 
     it('should handle errors', async () => {
       const imageId = '2'
-      mockedAxios.get.mockRejectedValue(new Error('Failed to fetch'))
+      mockedAxiosGet.mockRejectedValue(new Error('Failed to fetch'))
 
       await expect(getImageById(imageId)).rejects.toThrow('Failed to fetch')
     })
@@ -154,17 +152,17 @@ describe('catApi', () => {
     it('should call the correct API endpoint', async () => {
       const breedId = 'b2'
       const mockBreed = { id: breedId, name: 'Breed 2', description: 'Description 2' }
-      mockedAxios.get.mockResolvedValue({ data: mockBreed })
+      mockedAxiosGet.mockResolvedValue({ data: mockBreed })
 
       await getBreedById(breedId)
 
-      expect(mockedAxiosGet).toHaveBeenCalledWith(`https://api.thecatapi.com/v1/breeds/${breedId}`)
+      expect(mockedAxiosGet).toHaveBeenCalledWith(`/breeds/${breedId}`)
     })
 
     it('should return a breed', async () => {
       const breedId = 'b2'
       const mockBreed = { id: breedId, name: 'Breed 2', description: 'Description 2' }
-      mockedAxios.get.mockResolvedValue({ data: mockBreed })
+      mockedAxiosGet.mockResolvedValue({ data: mockBreed })
 
       const breed = await getBreedById(breedId)
 
@@ -173,7 +171,7 @@ describe('catApi', () => {
 
     it('should handle errors', async () => {
       const breedId = 'b2'
-      mockedAxios.get.mockRejectedValue(new Error('Failed to fetch'))
+      mockedAxiosGet.mockRejectedValue(new Error('Failed to fetch'))
 
       await expect(getBreedById(breedId)).rejects.toThrow('Failed to fetch')
     })

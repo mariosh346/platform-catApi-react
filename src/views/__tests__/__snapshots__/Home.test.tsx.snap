@@ -1,3 +1,17 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`Home > should have the same snapshot as befoere 1`] = `undefined`;
+exports[`Home > should have the same snapshot as befoere 1`] = `
+<body>
+  <div>
+    <div>
+      <h1>
+        Random Cats
+      </h1>
+      0
+      <p>
+        Loading...
+      </p>
+    </div>
+  </div>
+</body>
+`;
