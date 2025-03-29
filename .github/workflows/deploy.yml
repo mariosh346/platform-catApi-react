@@ -34,7 +34,7 @@ jobs:
           start: pnpm start
 
   build-deploy:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22
     needs: [vitest] # , cypress
     steps:
       - name: checkout repository
