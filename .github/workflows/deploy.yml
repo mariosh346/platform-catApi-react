@@ -33,7 +33,7 @@ jobs:
         uses: cypress-io/github-action@v6
         with:
           build: pnpm build
-          start: pnpm preview
+          start: pnpm preview --port 5173
 
   build-deploy:
     runs-on: ubuntu-22.04
