@@ -11,7 +11,7 @@ permissions:
 
 jobs:
   vitest:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
     - name: checkout repository
       uses: actions/checkout@v4
@@ -21,7 +21,7 @@ jobs:
       run: pnpm test
 
   cypress:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - name: checkout repository
         uses: actions/checkout@v4
@@ -36,7 +36,7 @@ jobs:
           start: pnpm preview
 
   build-deploy:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     needs: [vitest] # , cypress
     steps:
       - name: checkout repository
