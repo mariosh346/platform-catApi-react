@@ -17,7 +17,7 @@ jobs:
   vitest:
     runs-on: ubuntu-latest
     container:
-      image: node:22-alpine
+      image: node:22
     steps:
     - name: checkout repository
       uses: actions/checkout@v4
@@ -29,7 +29,7 @@ jobs:
   cypress:
     runs-on: ubuntu-latest
     container:
-      image: node:22-alpine
+      image: node:22
     steps:
       - name: checkout repository
         uses: actions/checkout@v4
@@ -46,7 +46,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     container:
-      image: node:22-alpine
+      image: node:22
     needs: [vitest] # , cypress
     steps:
       - name: checkout repository
@@ -72,7 +72,7 @@ jobs:
       url: "${{ steps.deployment.outputs.page_url }}/platform-catApi-react/"
     runs-on: ubuntu-latest
     container:
-      image: node:22-alpine
+      image: node:22
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
