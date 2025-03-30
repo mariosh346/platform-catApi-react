@@ -1,11 +1,11 @@
 import { describe, it, expect, vi, afterEach } from 'vitest'
 import { getRandomImages, getBreeds, getBreedImages, getImageById, getBreedById } from '../catApi'
 import { parseCatImages, parseBreeds } from '../parsers'
-import { setupCache } from 'axios-cache-interceptor'
+import { getAxios } from '../axiosCached'
 
-vi.mock('axios-cache-interceptor', () => ({setupCache: vi.fn()}))
+vi.mock('../axiosCached', () => ({getAxios: vi.fn()}))
 const mockedAxiosGet = vi.fn()
-vi.mocked(setupCache).mockReturnValue({get: mockedAxiosGet})
+vi.mocked(getAxios).mockReturnValue({get: mockedAxiosGet})
 
 describe('catApi', () => {
   const mockData = [
