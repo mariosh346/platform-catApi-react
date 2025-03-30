@@ -15,8 +15,11 @@ concurrency:
 
 jobs:
   vitest:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
+    - uses: actions/setup-node@v4
+      with:
+        node-version: '22'
     - name: checkout repository
       uses: actions/checkout@v4
     - name: setup environment
@@ -25,8 +28,11 @@ jobs:
       run: pnpm test
 
   cypress:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
       - name: checkout repository
         uses: actions/checkout@v4
       - name: setup environment
@@ -40,9 +46,12 @@ jobs:
           start: pnpm preview --port 5173
 
   build:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     needs: [vitest] # , cypress
     steps:
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
       - name: checkout repository
         uses: actions/checkout@v4
       - name: setup environment
@@ -64,7 +73,7 @@ jobs:
     environment:
       name: github-pages
       url: "${{ steps.deployment.outputs.page_url }}/platform-catApi-react/"
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
