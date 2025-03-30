@@ -16,10 +16,9 @@ concurrency:
 jobs:
   vitest:
     runs-on: ubuntu-latest
+    container:
+      image: node:22-alpine
     steps:
-    - uses: actions/setup-node@v4
-      with:
-        node-version: '22'
     - name: checkout repository
       uses: actions/checkout@v4
     - name: setup environment
@@ -29,10 +28,9 @@ jobs:
 
   cypress:
     runs-on: ubuntu-latest
+    container:
+      image: node:22-alpine
     steps:
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '22'
       - name: checkout repository
         uses: actions/checkout@v4
       - name: setup environment
@@ -47,11 +45,10 @@ jobs:
 
   build:
     runs-on: ubuntu-latest
+    container:
+      image: node:22-alpine
     needs: [vitest] # , cypress
     steps:
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '22'
       - name: checkout repository
         uses: actions/checkout@v4
       - name: setup environment
@@ -74,6 +71,8 @@ jobs:
       name: github-pages
       url: "${{ steps.deployment.outputs.page_url }}/platform-catApi-react/"
     runs-on: ubuntu-latest
+    container:
+      image: node:22-alpine
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
