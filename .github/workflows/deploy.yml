@@ -25,22 +25,18 @@ jobs:
       run: pnpm test
 
   cypress:
-    needs: build
     runs-on: ubuntu-22.04
     steps:
       - name: checkout repository
         uses: actions/checkout@v4
       - name: setup environment
         run: bash scripts/setup.sh
-      - name: Download Artifact
-        uses: actions/download-pages-artifact@v2
-        with:
-          path: ./dist
       - name: Install Cypress Binary
         run: npx cypress install
       - name: Cypress run
         uses: cypress-io/github-action@v6
         with:
+          build: pnpm build
           start: pnpm preview --port 5173
 
   build:
