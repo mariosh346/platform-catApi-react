@@ -16,25 +16,27 @@ concurrency:
 jobs:
   vitest:
     runs-on: ubuntu-latest
-    container:
-      image: node:22-alpine
     steps:
+    - uses: actions/setup-node@v4
+      with:
+        node-version: '22'
     - name: checkout repository
       uses: actions/checkout@v4
     - name: setup environment
-      run: sh scripts/setup.sh
+      run: bash scripts/setup.sh
     - name: Run Vitest Tests
       run: pnpm test
 
   cypress:
     runs-on: ubuntu-latest
-    container:
-      image: node:22-alpine
     steps:
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
       - name: checkout repository
         uses: actions/checkout@v4
       - name: setup environment
-        run: sh scripts/setup.sh
+        run: bash scripts/setup.sh
       - name: Install Cypress Binary
         run: npx cypress install
       - name: Cypress run
@@ -45,14 +47,15 @@ jobs:
 
   build:
     runs-on: ubuntu-latest
-    container:
-      image: node:22-alpine
     needs: [vitest] # , cypress
     steps:
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
       - name: checkout repository
         uses: actions/checkout@v4
       - name: setup environment
-        run: sh scripts/setup.sh
+        run: bash scripts/setup.sh
       - name: build environment
         run: pnpm build
       - name: Upload Artifact
@@ -71,8 +74,6 @@ jobs:
       name: github-pages
       url: "${{ steps.deployment.outputs.page_url }}/platform-catApi-react/"
     runs-on: ubuntu-latest
-    container:
-      image: node:22-alpine
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
