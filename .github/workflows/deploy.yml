@@ -63,7 +63,7 @@ jobs:
 
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+      url: "${{ steps.deployment.outputs.page_url }}/platform-catApi-react/"
     runs-on: ubuntu-22.04
     steps:
       - name: Deploy to GitHub Pages
