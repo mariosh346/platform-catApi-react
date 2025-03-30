@@ -33,7 +33,7 @@ jobs:
       - name: setup environment
         run: bash scripts/setup.sh
       - name: Download Artifact
-        uses: actions/download-pages-artifact@v3
+        uses: actions/download-pages-artifact@v2
         with:
           path: ./dist
       - name: Install Cypress Binary
