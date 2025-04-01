@@ -6,7 +6,7 @@ function Home(): JSX.Element {
   const { images, fetchImages, isLoading, error } = useFetchedImages()
 
   useEffect(() => {
-    if (isLoading) return
+    if (isLoading || images.length > 0) return
     void fetchImages()
   // we only want to fetch new images when the component mounts
   // eslint-disable-next-line react-hooks/exhaustive-deps
