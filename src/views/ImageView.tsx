@@ -1,110 +1,83 @@
-import { useState, useEffect, JSX, useMemo, useCallback } from 'react'
-import { useNavigate, useParams, useLocation, Location } from 'react-router-dom'
-import Modal from '../components/Modal'
-import { CatImage } from '../api/types'
-import { useFavorites } from '../hooks/useFavorites'
-import { parseCatImages } from '../api/parsers'
-import { getImageById } from '../api/catApi'
+import { useEffect, JSX, useMemo, useCallback } from 'react';
+import { useNavigate, useParams, useLocation, Location } from 'react-router-dom';
+import Modal from '../components/Modal';
+import { CatImage } from '../api/types';
+import { useFavorites } from '../hooks/useFavorites';
+import useFetchImageDetail from '../hooks/useFetchImageDetail';
+import Button from '../components/atoms/Button';
+import Loader from '../components/atoms/Loader';
 
 function ImageView(): JSX.Element {
-	const [selectedImage, setSelectedImage] = useState<CatImage | null>(null)
-	const [isLoading, setIsLoading] = useState(true)
-	const [error, setError] = useState<string | null>(null)
-	const navigate = useNavigate()
-	const location: Location<unknown> = useLocation()
-	const { imageId } = useParams()
-	const { addFavorite, removeFavorite, favorites } = useFavorites()
+	const navigate = useNavigate();
+	const location: Location<unknown> = useLocation();
+	const { imageId } = useParams<{ imageId: string }>();
+	const { addFavorite, removeFavorite, favorites } = useFavorites();
+	const { selectedImage, isLoading, error, fetchImageDetail } = useFetchImageDetail();
 
-	const fetchImageFromState = useCallback(() => {
-		const imageFromState = typeof location.state === 'object' 
-			&& location.state 
-			&& 'image' in location.state
-			? location.state.image 
-			: undefined
-
-		if (imageFromState) {
-			try {
-				const [image] = parseCatImages([imageFromState])
-				setSelectedImage(image)
-				return
-			} catch (error) {
-				console.error('Invalid state data:', error)
-			}
-		}
-	},[location.state])
-	
-	const fetchImageFromApi = useCallback(async (imageId: string) => {
-		try {
-			const image = await getImageById(imageId)
-			setSelectedImage(image)
-		} catch (err) {
-			console.error('Failed to fetch image:', err)
-			setError('Failed to load image')
-			void navigate('/')
-		}
-	}, [navigate])
-
-	const fetchImage = useCallback(async () => {
-		if (!imageId) return
-		setIsLoading(true)
-		fetchImageFromState()
-		if (!selectedImage)  {
-			await fetchImageFromApi(imageId)
-		}
-		setIsLoading(false)
-	// this sets selectedImage, so it cannot rely on this
-	// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [fetchImageFromApi, fetchImageFromState, imageId])
+	const navigateHome = useCallback(() => navigate('/'), [navigate]);
 
 	useEffect(() => {
-		void fetchImage()
-	}, [imageId, fetchImage])
+		if (!imageId) {
+			navigateHome();
+			return;
+		}
+		const initialImage =
+			typeof location.state === 'object' && location.state && 'image' in location.state
+				? location.state.image
+				: undefined;
+		void fetchImageDetail(imageId, initialImage);
+	}, [imageId, fetchImageDetail, location.state, navigateHome]);
 
 	const closeModal = () => {
-		void navigate(-1)
-	}
+		void navigate(-1);
+	};
 
-	const isFavorite = useMemo(() => 
-		selectedImage ? favorites.some(fav => fav.id === selectedImage.id) : false,
-		[selectedImage, favorites]
-	)
+	const isFavorite = useMemo(
+		() => (selectedImage ? favorites.some((fav) => fav.id === selectedImage.id) : false),
+		[selectedImage, favorites],
+	);
 
-	const errorMessage = useMemo(() => 
-		(error ?? !selectedImage) ? 'Error loading image' : undefined,
-		[error, selectedImage]
-	)
-	const clickFavoriteButton = (selectedImage: CatImage) => {
+	const errorMessage = useMemo(() => (error ?? !selectedImage) ? 'Error loading image' : undefined, [
+		error,
+		selectedImage,
+	]);
+
+	const clickFavoriteButton = (image: CatImage) => {
 		if (isFavorite) {
-			removeFavorite(selectedImage) }
-		else{
-			addFavorite(selectedImage)
+			removeFavorite(image);
+		} else {
+			addFavorite(image);
 		}
-	}
-
+	};
 
 	return (
-		<Modal onClose={closeModal} isLoading={isLoading} error={errorMessage}>
-			{selectedImage && <>
-			<img src={selectedImage.url} alt="cat" />
-			{selectedImage.breeds && selectedImage.breeds.length > 0 ? (
-				<>
-					<h3>{selectedImage.breeds[0].name}</h3>
-					<p>{selectedImage.breeds[0].description}</p>
-				</>
-			) : (
-				<p>No breed info available</p>
+		<Modal onClose={closeModal} isLoading={isLoading} error={errorMessage} title={selectedImage?.breeds?.[0]?.name || 'Cat Image'}>
+			{isLoading && !selectedImage && <Loader message="Loading image details..." />}
+			{error && !selectedImage && <p className="text-red-500 text-center my-4">{error}</p>}
+			{selectedImage && (
+				<div className="flex flex-col items-center">
+					<img src={selectedImage.url} alt="cat" className="max-w-full h-auto rounded-lg shadow-md mb-4" loading="lazy" />
+					{selectedImage.breeds && selectedImage.breeds.length > 0 ? (
+						<>
+							<h3 className="text-xl font-semibold">{selectedImage.breeds[0].name}</h3>
+							<p className="text-gray-700 text-center mt-2">{selectedImage.breeds[0].description}</p>
+						</>
+					) : (
+						<p className="text-gray-700 mt-2">No breed info available</p>
+					)}
+					<Button
+						onClick={() => {
+							clickFavoriteButton(selectedImage);
+						}}
+						variant={isFavorite ? 'danger' : 'primary'}
+						className="mt-4"
+					>
+						{isFavorite ? 'Remove from Favourites' : 'Mark as Favourite'}
+					</Button>
+				</div>
 			)}
-			<button 
-				type="button" 
-				onClick={() => {
-					clickFavoriteButton(selectedImage)
-				}}
-			>
-				{isFavorite ? "Remove from Favourites" : "Mark as Favourite"}
-			</button>
-			</>}	
 		</Modal>
-	)
+	);
 }
 
 export default ImageView

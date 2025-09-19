@@ -1,34 +1,42 @@
-import { JSX, useEffect } from 'react'
-import useFetchedImages from '../hooks/useFetchedImages'
-import ImageGallery from '../components/ImageGallery'
+import { JSX, useEffect } from 'react';
+import useFetchCatImages from '../hooks/useFetchCatImages';
+import ImageGallery from '../components/ImageGallery';
+import Button from '../components/atoms/Button';
+import Loader from '../components/atoms/Loader';
 
 function Home(): JSX.Element {
-  const { images, fetchImages, isLoading, error } = useFetchedImages()
+  const { images, fetchImages, isLoading, error } = useFetchCatImages();
 
   useEffect(() => {
-    if (isLoading || images.length > 0) return
-    void fetchImages()
-  // we only want to fetch new images when the component mounts
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+    if (isLoading || images.length > 0) return;
+    void fetchImages();
+    // we only want to fetch new images when the component mounts
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div>
       <h1>Random Cats</h1>
-      {images.length && <div>
-        <ImageGallery images={images} />
-        <button 
-          type="button" 
-          onClick={() => { void fetchImages(false) }}
-          disabled={isLoading}
-        >
-          Load More
-        </button>
-      </div>}
-      {isLoading && <p>Loading...</p>}
-      {error && <p className="text-red-500">{error}</p>}
+      {images.length > 0 || isLoading ? (
+        <div>
+          <ImageGallery images={images} isLoading={isLoading} />
+          <div className="flex justify-center my-4">
+            <Button
+              onClick={() => {
+                void fetchImages(false);
+              }}
+              isLoading={isLoading}
+            >
+              Load More
+            </Button>
+          </div>
+        </div>
+      ) : (
+        <p className="text-center my-4">No images found.</p>
+      )}
+      {error && <p className="text-red-500 text-center my-4">{error}</p>}
     </div>
-  )
+  );
 }
 
 export default Home

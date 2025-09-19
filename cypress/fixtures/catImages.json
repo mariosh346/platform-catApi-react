@@ -1,0 +1,58 @@
+[
+    {
+        "id": "image1",
+        "url": "https://cdn2.thecatapi.com/images/image1.jpg",
+        "breeds": [
+            {
+                "id": "breed1",
+                "name": "Bengal",
+                "description": "Bengal cats are a domesticated cat breed created from hybrids of domestic cats, especially the Egyptian Mau, with the Asian leopard cat (Prionailurus bengalensis)."
+            }
+        ]
+    },
+    {
+        "id": "image2",
+        "url": "https://cdn2.thecatapi.com/images/image2.jpg",
+        "breeds": []
+    },
+    {
+        "id": "image3",
+        "url": "https://cdn2.thecatapi.com/images/image3.jpg",
+        "breeds": []
+    },
+    {
+        "id": "image4",
+        "url": "https://cdn2.thecatapi.com/images/image4.jpg",
+        "breeds": []
+    },
+    {
+        "id": "image5",
+        "url": "https://cdn2.thecatapi.com/images/image5.jpg",
+        "breeds": []
+    },
+    {
+        "id": "image6",
+        "url": "https://cdn2.thecatapi.com/images/image6.jpg",
+        "breeds": []
+    },
+    {
+        "id": "image7",
+        "url": "https://cdn2.thecatapi.com/images/image7.jpg",
+        "breeds": []
+    },
+    {
+        "id": "image8",
+        "url": "https://cdn2.thecatapi.com/images/image8.jpg",
+        "breeds": []
+    },
+    {
+        "id": "image9",
+        "url": "https://cdn2.thecatapi.com/images/image9.jpg",
+        "breeds": []
+    },
+    {
+        "id": "image10",
+        "url": "https://cdn2.thecatapi.com/images/image10.jpg",
+        "breeds": []
+    }
+]

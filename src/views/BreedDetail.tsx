@@ -1,83 +1,49 @@
-import { useEffect, useState, JSX, useCallback, useMemo } from 'react'
-import { useLocation, useNavigate, useParams, Location } from 'react-router-dom'
-import Modal from '../components/Modal'
-import { getBreedById, getBreedImages } from '../api/catApi'
-import ImageGallery from '../components/ImageGallery'
-import { parseBreed } from '../api/parsers'
-import { Breed, CatImage } from '../api/types'
+import { useEffect, JSX, useCallback, useMemo } from 'react';
+import { useLocation, useNavigate, useParams, Location } from 'react-router-dom';
+import Modal from '../components/Modal';
+import ImageGallery from '../components/ImageGallery';
+import useFetchBreedDetail from '../hooks/useFetchBreedDetail';
+import Loader from '../components/atoms/Loader';
 
 function BreedDetail(): JSX.Element {
-  const location: Location<unknown> = useLocation()
-  const navigate = useNavigate()
-  const { breedId } = useParams<{ breedId: string }>()
-  const [breedImages, setBreedImages] = useState<CatImage[]>([])
-  const [isLoading, setIsLoading] = useState(true)
-	const [error, setError] = useState<string | null>(null)
-  const [breed, setBreed] = useState<Breed | null>(null);
-  const navigateBreeds = useCallback(() => navigate('/breeds'), [navigate])
+  const location: Location<unknown> = useLocation();
+  const navigate = useNavigate();
+  const { breedId } = useParams<{ breedId: string }>();
+  const { breed, breedImages, isLoading, error, fetchBreedDetail } = useFetchBreedDetail();
 
-  const fetchBreedFromState = useCallback(() => {
-    const breedUnParsed: unknown = (typeof location.state === 'object'
-    && location.state && 'breed' in location.state)
-      ? location.state.breed
-      : undefined
-    if (breedUnParsed) {
-    try {
-      setBreed(parseBreed(breedUnParsed))
-    } catch {
-      console.error('Invalid state data:')
-    }}
-  }, [location.state])
-
-  const fetchBreedFromApi = useCallback(async (id: string) => {
-    try {
-      const breed = await getBreedById(id)
-      setBreed(breed)
-    } catch (err) {
-      console.error('Failed to fetch image:', err)
-      setError('Failed to load image')
-    }
-  }, [])
-
+  const navigateBreeds = useCallback(() => navigate('/breeds'), [navigate]);
 
   useEffect(() => {
-    if (!breedId) return
-		setIsLoading(true)
-    fetchBreedFromState()
-    if (breedId) {
-      void fetchBreedImages(breedId)
-      void fetchBreedFromApi(breedId)
+    if (!breedId) {
+      navigateBreeds();
+      return;
     }
-    setIsLoading(false)
-  }, [breedId, fetchBreedFromApi, fetchBreedFromState])
-
-  const fetchBreedImages = async (breedId: string) => {
-    try {
-      const data = await getBreedImages(breedId, 10)
-      setBreedImages(data)
-    } catch (error) {
-      console.error(error)
-    }
-  }
+    const initialBreed =
+      typeof location.state === 'object' && location.state && 'breed' in location.state
+        ? location.state.breed
+        : undefined;
+    void fetchBreedDetail(breedId, initialBreed);
+  }, [breedId, fetchBreedDetail, location.state, navigateBreeds]);
 
   const closeModal = () => {
-    void navigateBreeds()
-  }
+    void navigateBreeds();
+  };
 
-  const errorMessage = useMemo(() => 
-      (error ?? !breed) ? 'Error loading breed' : undefined,
-      [error, breed]
-    )
+  const errorMessage = useMemo(() => (error ?? !breed) ? 'Error loading breed' : undefined, [error, breed]);
 
   return (
     <Modal onClose={closeModal} isLoading={isLoading} error={errorMessage}>
-      {breed && <>
-        <h1>{breed.name}</h1>
-        <p>{breed.description}</p>
-        <ImageGallery images={breedImages} />
-      </>}
+      {isLoading && !breed && <Loader message="Loading breed details..." />}
+      {error && !breed && <p className="text-red-500 text-center my-4">{error}</p>}
+      {breed && (
+        <>
+          <h1>{breed.name}</h1>
+          <p>{breed.description}</p>
+          <ImageGallery images={breedImages} />
+        </>
+      )}
     </Modal>
-  )
+  );
 }
 
 export default BreedDetail
