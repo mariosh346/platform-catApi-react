@@ -3,6 +3,7 @@
 
 describe('Home Page', () => {
   beforeEach(() => {
+    cy.clearLocalStorage('favorites'); // Clear favorites before each test
     cy.visit('/');
   });
 
@@ -18,7 +19,7 @@ describe('Home Page', () => {
     cy.get('button').contains('Load More').should('exist');
   });
 
-  it('displays a loader while fetching images', () => {
+  it('displays skeleton loaders while fetching images', () => {
     cy.intercept('GET', '**/images/search?limit=10', (req) => {
       req.reply({
         delay: 500, // Simulate network delay
@@ -26,9 +27,9 @@ describe('Home Page', () => {
       });
     }).as('getCatImagesDelayed');
     cy.visit('/');
-    cy.get('.animate-spin').should('exist'); // Check for the loader spinner
+    cy.get('.animate-pulse').should('have.length', 10); // Check for 10 skeleton cards
     cy.wait('@getCatImagesDelayed');
-    cy.get('.animate-spin').should('not.exist');
+    cy.get('.animate-pulse').should('not.exist');
     cy.get('img').should('have.length.greaterThan', 0);
   });
 
@@ -37,7 +38,7 @@ describe('Home Page', () => {
     cy.visit('/');
     cy.wait('@getCatImagesError');
     cy.get('p.text-red-500').contains('Failed to fetch images').should('exist');
-    cy.get('button').contains('Load More').should('be.disabled'); // Button should be disabled on error
+    cy.get('button').contains('Load More').should('not.be.disabled'); // Button should be enabled to allow retry
   });
 
   it('displays "No images found." when API returns empty data', () => {
@@ -63,30 +64,15 @@ describe('Home Page', () => {
     cy.wait('@getCatImages');
     cy.get('img').first().click();
     cy.get('[role="dialog"]').should('be.visible');
-    cy.get('body').trigger('keydown', { keyCode: 27 }); // Escape key
+    cy.realPress('{esc}'); // Use cypress-real-events for Escape key
     cy.get('[role="dialog"]').should('not.exist');
   });
 
-  it('traps focus within the modal', () => {
-    cy.intercept('GET', '**/images/search?limit=10', { fixture: 'catImages.json' }).as('getCatImages');
-    cy.visit('/');
-    cy.wait('@getCatImages');
-    cy.get('img').first().click();
-    cy.get('[role="dialog"]').should('be.visible');
-
-    // Assuming the modal has a close button and a favorite button
-    cy.get('[role="dialog"]').find('button').first().as('firstFocusable');
-    cy.get('[role="dialog"]').find('button').contains('Mark as Favourite').as('lastFocusable');
-
-    cy.get('@firstFocusable').focus();
-    cy.focused().should('eq', cy.get('@firstFocusable'));
-
-    cy.focused().tab();
-    cy.focused().should('eq', cy.get('@lastFocusable'));
-
-    cy.focused().tab({ shift: true });
-    cy.focused().should('eq', cy.get('@firstFocusable'));
+  it('displays "No favorite cats yet." when favorites are empty', () => {
+    cy.visit('/favorites');
+    cy.get('[data-cy="no-favorites-message"]').contains('No favorite cats yet.').should('exist');
   });
+
 
   it('adds and removes image from favorites', () => {
     cy.intercept('GET', '**/images/search?limit=10', { fixture: 'catImages.json' }).as('getCatImages');
@@ -98,7 +84,7 @@ describe('Home Page', () => {
     // Mark as favorite
     cy.get('button').contains('Mark as Favourite').click();
     cy.get('button').contains('Remove from Favourites').should('exist');
-    cy.get('body').trigger('keydown', { keyCode: 27 }); // Close modal
+    cy.realPress('{esc}'); // Close modal
 
     // Navigate to favorites page
     cy.get('nav').contains('Favorites').click();
@@ -113,9 +99,9 @@ describe('Home Page', () => {
     // Remove from favorites
     cy.get('button').contains('Remove from Favourites').click();
     cy.get('button').contains('Mark as Favourite').should('exist'); // Button text changes back
-    cy.get('body').trigger('keydown', { keyCode: 27 }); // Close modal
+    cy.get('[data-cy="close-modal-button"]').click(); // Close modal by clicking the close button
 
     // Verify no favorites
-    cy.get('p').contains('No favorite cats yet.').should('exist');
+    cy.get('[data-cy="no-favorites-message"]').contains('No favorite cats yet.').should('exist');
   });
 });

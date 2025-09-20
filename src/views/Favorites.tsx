@@ -29,7 +29,7 @@ function Favorites(): JSX.Element {
       {favorites.length > 0 ? (
         <ImageGallery images={favorites} renderAfterImage={renderRemoveFavoriteButton} />
       ) : (
-        <p className="text-center my-4">No favorite cats yet.</p>
+        <p className="text-center my-4" data-cy="no-favorites-message">No favorite cats yet.</p>
       )}
     </div>
   );

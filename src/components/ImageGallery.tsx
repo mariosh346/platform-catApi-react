@@ -13,7 +13,7 @@ const ImageGallery = ({ images, renderAfterImage, isLoading = false }: ImageGall
   const numberOfSkeletons = 10; // Display 10 skeleton cards while loading
 
   return (
-    <div className="flex flex-wrap justify-center">
+    <div className="flex flex-wrap justify-center" data-cy="image-gallery">
       {isLoading && images.length === 0
         ? Array.from({ length: numberOfSkeletons }).map((_, index) => <SkeletonCard key={index} />)
         : images.map((image) => (

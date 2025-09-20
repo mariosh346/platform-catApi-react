@@ -2,7 +2,6 @@ import { JSX, useEffect } from 'react';
 import useFetchCatImages from '../hooks/useFetchCatImages';
 import ImageGallery from '../components/ImageGallery';
 import Button from '../components/atoms/Button';
-import Loader from '../components/atoms/Loader';
 
 function Home(): JSX.Element {
   const { images, fetchImages, isLoading, error } = useFetchCatImages();
@@ -17,24 +16,22 @@ function Home(): JSX.Element {
   return (
     <div>
       <h1>Random Cats</h1>
-      {images.length > 0 || isLoading ? (
-        <div>
-          <ImageGallery images={images} isLoading={isLoading} />
-          <div className="flex justify-center my-4">
-            <Button
-              onClick={() => {
-                void fetchImages(false);
-              }}
-              isLoading={isLoading}
-            >
-              Load More
-            </Button>
-          </div>
-        </div>
-      ) : (
+      {error && <p className="text-red-500 text-center my-4">{error}</p>}
+      {images.length === 0 && !isLoading && !error && (
         <p className="text-center my-4">No images found.</p>
       )}
-      {error && <p className="text-red-500 text-center my-4">{error}</p>}
+      <ImageGallery images={images} isLoading={isLoading} />
+      <div className="flex justify-center my-4">
+        <Button
+          onClick={() => {
+            void fetchImages(false);
+          }}
+          isLoading={isLoading}
+          disabled={isLoading}
+        >
+          Load More
+        </Button>
+      </div>
     </div>
   );
 }

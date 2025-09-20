@@ -57,6 +57,9 @@ importers:
       cypress-plugin-tab:
         specifier: ^1.0.5
         version: 1.0.5
+      cypress-real-events:
+        specifier: ^1.15.0
+        version: 1.15.0(cypress@12.17.4)
       eslint:
         specifier: ^9.21.0
         version: 9.22.0(jiti@1.21.7)
@@ -1104,6 +1107,11 @@ packages:
 
   cypress-plugin-tab@1.0.5:
     resolution: {integrity: sha512-QtTJcifOVwwbeMP3hsOzQOKf3EqKsLyjtg9ZAGlYDntrCRXrsQhe4ZQGIthRMRLKpnP6/tTk6G0gJ2sZUfRliQ==}
+
+  cypress-real-events@1.15.0:
+    resolution: {integrity: sha512-in98xxTnnM9Z7lZBvvVozm99PBT2eEOjXRG5LKWyYvQnj9mGWXMiPNpfw7e7WiraBFh7XlXIxnE9Cu5o+52kQQ==}
+    peerDependencies:
+      cypress: ^4.x || ^5.x || ^6.x || ^7.x || ^8.x || ^9.x || ^10.x || ^11.x || ^12.x || ^13.x || ^14.x || ^15.x
 
   cypress@12.17.4:
     resolution: {integrity: sha512-gAN8Pmns9MA5eCDFSDJXWKUpaL3IDd89N9TtIupjYnzLSmlpVr+ZR+vb4U/qaMp+lB6tBvAmt7504c3Z4RU5KQ==}
@@ -3564,6 +3572,10 @@ snapshots:
   cypress-plugin-tab@1.0.5:
     dependencies:
       ally.js: 1.4.1
+
+  cypress-real-events@1.15.0(cypress@12.17.4):
+    dependencies:
+      cypress: 12.17.4
 
   cypress@12.17.4:
     dependencies:

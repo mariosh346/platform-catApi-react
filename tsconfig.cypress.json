@@ -2,7 +2,8 @@
     "extends": "./tsconfig.json",
     "compilerOptions": {
         "types": [
-            "cypress"
+            "cypress",
+            "cypress-plugin-tab"
         ],
         "strict": true,
         "strictNullChecks": true,
