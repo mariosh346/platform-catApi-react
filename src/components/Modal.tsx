@@ -3,13 +3,11 @@ import { JSX, useEffect, useRef, useCallback, useMemo } from 'react';
 interface ModalProps {
   children: React.ReactNode;
   onClose: () => void;
-  isLoading?: boolean;
-  error?: string;
   title?: string; // Added for ARIA-labelledby
   description?: string; // Added for ARIA-describedby
 }
 
-function Modal({ children, onClose, isLoading, error, title, description }: ModalProps): JSX.Element {
+function Modal({ children, onClose, title, description }: ModalProps): JSX.Element {
   const modalRef = useRef<HTMLDivElement>(null);
 
   const handleKeyDown = useCallback(
@@ -59,12 +57,7 @@ function Modal({ children, onClose, isLoading, error, title, description }: Moda
     return () => {
       modalRef.current?.removeEventListener('keydown', handleTabKeyPress);
     };
-  }, [isLoading, error, children]); // Re-run when modal content changes
-
-  const renderLoadingOrError = () => {
-    if (isLoading) return <p className='text-white text-center m-8'>Loading...</p>;
-    if (error) return <p className='text-red-500 text-center m-8'>{error}</p>;
-  };
+  }, [children]); // Re-run when modal content changes
 
   const modalId = useMemo(() => `modal-${Math.random().toString(36).substring(2, 9)}`, []);
   const titleId = title ? `${modalId}-title` : undefined;
@@ -97,7 +90,7 @@ function Modal({ children, onClose, isLoading, error, title, description }: Moda
         </button>
         {title && <h2 id={titleId} className="text-xl font-bold mb-4">{title}</h2>}
         {description && <p id={descriptionId} className="mb-4">{description}</p>}
-        {renderLoadingOrError() ?? children}
+        <div>{children}</div>
       </div>
     </div>
   );

@@ -1,8 +1,9 @@
-import { useMemo, JSX, memo, useEffect } from 'react';
+import React, { useMemo, JSX, memo, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Breed } from '../api/types';
 import useFetchBreeds from '../hooks/useFetchBreeds';
-import Loader from '../components/atoms/Loader';
+import Skeleton from '../components/atoms/Skeleton';
+import ErrorMessage from '../components/atoms/ErrorMessage';
 
 const BreedListItem = memo(({ breed }: { breed: Breed }): JSX.Element => {
   return (
@@ -30,8 +31,12 @@ function Breeds(): JSX.Element {
   return (
     <div>
       <h1>Cat Breeds</h1>
-      {isLoading && <Loader />}
-      {error && <p className="text-red-500 text-center my-4">{error}</p>}
+      {isLoading && (
+        Array.from({ length: 20 }).map((_, i) => (
+          <Skeleton key={i} height="20px" width="100px" className="rounded-md" />
+        ))
+      )}
+      {error && <ErrorMessage message="Failed to load breeds." onRetry={() => void fetchBreeds()} />}
       {!isLoading && !error && breeds.length > 0 && <ul>{listItems}</ul>}
       {!isLoading && !error && breeds.length === 0 && <p className="text-center my-4">No breeds found.</p>}
     </div>

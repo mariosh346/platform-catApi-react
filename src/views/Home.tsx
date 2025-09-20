@@ -1,7 +1,8 @@
-import { JSX, useEffect } from 'react';
+import React, { JSX, useEffect } from 'react';
 import useFetchCatImages from '../hooks/useFetchCatImages';
 import ImageGallery from '../components/ImageGallery';
 import Button from '../components/atoms/Button';
+import ErrorMessage from '../components/atoms/ErrorMessage';
 
 function Home(): JSX.Element {
   const { images, fetchImages, isLoading, error } = useFetchCatImages();
@@ -16,8 +17,8 @@ function Home(): JSX.Element {
   return (
     <div>
       <h1>Random Cats</h1>
-      {error && <p className="text-red-500 text-center my-4">{error}</p>}
-      {images.length === 0 && !isLoading && !error && (
+      {error && <ErrorMessage message="Failed to load images." onRetry={() => void fetchImages()} />}
+      {!isLoading && !error && images.length === 0 && (
         <p className="text-center my-4">No images found.</p>
       )}
       <ImageGallery images={images} isLoading={isLoading} />

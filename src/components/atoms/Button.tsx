@@ -1,4 +1,4 @@
-import { ButtonHTMLAttributes, DetailedHTMLProps, JSX } from 'react';
+import React, { ButtonHTMLAttributes, DetailedHTMLProps, JSX } from 'react';
 
 interface ButtonProps extends DetailedHTMLProps<ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement> {
     children: React.ReactNode;
@@ -30,7 +30,7 @@ const Button = ({
 
     return (
         <button
-            className={`${baseStyles} ${variantStyles[variant]} ${sizeStyles[size]} ${className} ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
+            className={`${baseStyles} ${variantStyles[variant]} ${sizeStyles[size]} ${className} ${isLoading ? 'animate-pulse' : ''}`}
             disabled={isLoading || disabled}
             {...rest}
         >

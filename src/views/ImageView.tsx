@@ -1,11 +1,12 @@
-import { useEffect, JSX, useMemo, useCallback } from 'react';
+import React, { useEffect, JSX, useMemo, useCallback } from 'react';
 import { useNavigate, useParams, useLocation, Location } from 'react-router-dom';
 import Modal from '../components/Modal';
 import { CatImage } from '../api/types';
 import { useFavorites } from '../hooks/useFavorites';
 import useFetchImageDetail from '../hooks/useFetchImageDetail';
 import Button from '../components/atoms/Button';
-import Loader from '../components/atoms/Loader';
+import Skeleton from '../components/atoms/Skeleton';
+import ErrorMessage from '../components/atoms/ErrorMessage';
 
 function ImageView(): JSX.Element {
 	const navigate = useNavigate();
@@ -37,7 +38,7 @@ function ImageView(): JSX.Element {
 		[selectedImage, favorites],
 	);
 
-	const errorMessage = useMemo(() => (error ?? !selectedImage) ? 'Error loading image' : undefined, [
+	const errorMessage = useMemo(() => (error ?? !selectedImage) ? 'Failed to load image details.' : undefined, [
 		error,
 		selectedImage,
 	]);
@@ -51,9 +52,16 @@ function ImageView(): JSX.Element {
 	};
 
 	return (
-		<Modal onClose={closeModal} isLoading={isLoading} error={errorMessage} title={selectedImage?.breeds?.[0]?.name || 'Cat Image'}>
-			{isLoading && !selectedImage && <Loader message="Loading image details..." />}
-			{error && !selectedImage && <p className="text-red-500 text-center my-4">{error}</p>}
+		<Modal onClose={closeModal} title={selectedImage?.breeds?.[0]?.name || 'Cat Image'}>
+			{isLoading && !selectedImage && (
+				<div className="p-4 flex flex-col items-center">
+					<Skeleton width="100%" height="300px" className="rounded-lg mb-4" />
+					<Skeleton height="25px" width="60%" className="mb-2" />
+					<Skeleton height="20px" width="80%" className="mb-4" />
+					<Skeleton height="40px" width="150px" className="rounded-md" />
+				</div>
+			)}
+			{error && !selectedImage && <ErrorMessage message={errorMessage || 'An unknown error occurred.'} onRetry={() => void fetchImageDetail(imageId!)} />}
 			{selectedImage && (
 				<div className="flex flex-col items-center">
 					<img src={selectedImage.url} alt="cat" className="max-w-full h-auto rounded-lg shadow-md mb-4" loading="lazy" />
@@ -76,6 +84,7 @@ function ImageView(): JSX.Element {
 					</Button>
 				</div>
 			)}
+			{!isLoading && !error && !selectedImage && <p className="text-center my-4">No image details found.</p>}
 		</Modal>
 	);
 }
