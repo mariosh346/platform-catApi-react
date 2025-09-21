@@ -35,21 +35,15 @@ const App: React.FC = () => {
       </nav>
 
       <Suspense fallback={<div>Loading...</div>}>
-        {/* Render main UI using backgroundLocation (if present) so it stays behind modal */}
+        {/* Render main UI and modal routes */}
         <Routes location={state?.backgroundLocation ?? location}>
           <Route path="/" element={<Home />} />
           <Route path="/breeds" element={<Breeds />} />
           <Route path="/favorites" element={<Favorites />} />
+          <Route path="/image/:id" element={<CatModal />} />
+          <Route path="/breed/:id" element={<BreedModal />} />
           {/* Add other non-modal routes here */}
         </Routes>
-
-        {/* If we have a background location, render modal routes as overlays */}
-        {state?.backgroundLocation && (
-          <Routes>
-            <Route path="/image/:id" element={<CatModal />} />
-            <Route path="/breed/:id" element={<BreedModal />} />
-          </Routes>
-        )}
       </Suspense>
     </div>
   );

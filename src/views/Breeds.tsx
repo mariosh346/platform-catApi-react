@@ -1,16 +1,32 @@
 import React, { useMemo, JSX, memo, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Breed } from '../api/types';
 import useFetchBreeds from '../hooks/useFetchBreeds';
 import Skeleton from '../components/atoms/Skeleton';
 import ErrorMessage from '../components/atoms/ErrorMessage';
 
 const BreedListItem = memo(({ breed }: { breed: Breed }): JSX.Element => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const openBreedModal = () => {
+    navigate(`/breed/${breed.id}`, { state: { backgroundLocation: location } });
+  };
+
   return (
-    <li>
-      <Link to={`/breed-detail/${breed.id}`} state={{ breed }} onMouseEnter={() => void import('./BreedDetail')}>
-        {breed.name}
-      </Link>
+    <li
+      onClick={openBreedModal}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          openBreedModal();
+        }
+      }}
+      role="button"
+      tabIndex={0}
+      aria-label={`View details for breed ${breed.name}`}
+      className="cursor-pointer"
+    >
+      {breed.name}
     </li>
   );
 });

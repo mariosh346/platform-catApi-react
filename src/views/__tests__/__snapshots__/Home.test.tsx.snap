@@ -7,10 +7,81 @@ exports[`Home > should have the same snapshot as befoere 1`] = `
       <h1>
         Random Cats
       </h1>
-      0
-      <p>
-        Loading...
-      </p>
+      <div
+        class="flex flex-wrap justify-center"
+        data-cy="image-gallery"
+      >
+        <div
+          aria-label="loading"
+          class="bg-gray-300 rounded-lg shadow-md animate-pulse m-3"
+          role="status"
+          style="width: 200px; height: 200px;"
+        />
+        <div
+          aria-label="loading"
+          class="bg-gray-300 rounded-lg shadow-md animate-pulse m-3"
+          role="status"
+          style="width: 200px; height: 200px;"
+        />
+        <div
+          aria-label="loading"
+          class="bg-gray-300 rounded-lg shadow-md animate-pulse m-3"
+          role="status"
+          style="width: 200px; height: 200px;"
+        />
+        <div
+          aria-label="loading"
+          class="bg-gray-300 rounded-lg shadow-md animate-pulse m-3"
+          role="status"
+          style="width: 200px; height: 200px;"
+        />
+        <div
+          aria-label="loading"
+          class="bg-gray-300 rounded-lg shadow-md animate-pulse m-3"
+          role="status"
+          style="width: 200px; height: 200px;"
+        />
+        <div
+          aria-label="loading"
+          class="bg-gray-300 rounded-lg shadow-md animate-pulse m-3"
+          role="status"
+          style="width: 200px; height: 200px;"
+        />
+        <div
+          aria-label="loading"
+          class="bg-gray-300 rounded-lg shadow-md animate-pulse m-3"
+          role="status"
+          style="width: 200px; height: 200px;"
+        />
+        <div
+          aria-label="loading"
+          class="bg-gray-300 rounded-lg shadow-md animate-pulse m-3"
+          role="status"
+          style="width: 200px; height: 200px;"
+        />
+        <div
+          aria-label="loading"
+          class="bg-gray-300 rounded-lg shadow-md animate-pulse m-3"
+          role="status"
+          style="width: 200px; height: 200px;"
+        />
+        <div
+          aria-label="loading"
+          class="bg-gray-300 rounded-lg shadow-md animate-pulse m-3"
+          role="status"
+          style="width: 200px; height: 200px;"
+        />
+      </div>
+      <div
+        class="flex justify-center my-4"
+      >
+        <button
+          class="font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline bg-blue-500 hover:bg-blue-700 text-white text-base  animate-pulse"
+          disabled=""
+        >
+          Loading...
+        </button>
+      </div>
     </div>
   </div>
 </body>

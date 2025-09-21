@@ -9,7 +9,7 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "test": "vitest",
+    "test": "vitest run",
     "coverage": "vitest run --coverage",
     "cypress:open": "cypress open",
     "cypress:run": "cypress run",
@@ -19,6 +19,7 @@
   "dependencies": {
     "axios": "^1.12.0",
     "axios-cache-interceptor": "^1.6.2",
+    "focus-trap-react": "^11.0.4",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-router-dom": "^7.6.0"
@@ -27,9 +28,11 @@
     "@eslint/js": "^9.21.0",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.2.0",
+    "@types/jest": "^30.0.0",
     "@types/node": "^22.13.10",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
+    "@types/testing-library__jest-dom": "^6.0.0",
     "@vitejs/plugin-react-swc": "^3.8.0",
     "@vitest/coverage-v8": "^1.5.0",
     "autoprefixer": "^10.4.18",

@@ -1,62 +1,85 @@
-import React, { useEffect, JSX, useCallback, useMemo } from 'react';
-import { useLocation, useNavigate, useParams, Location } from 'react-router-dom';
-import Modal from '../components/Modal';
-import ImageGallery from '../components/ImageGallery';
-import useFetchBreedDetail from '../hooks/useFetchBreedDetail';
-import Skeleton from '../components/atoms/Skeleton';
-import ErrorMessage from '../components/atoms/ErrorMessage';
+import React, { useEffect, useRef } from "react";
+import FocusTrap from "focus-trap-react";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
+import { fetchBreedById } from "../services/breeds";
+import Skeleton from "../components/atoms/Skeleton";
+import { Breed } from "../api/types";
 
-function BreedDetail(): JSX.Element {
-  const location: Location<unknown> = useLocation();
+const BreedModal: React.FC = () => {
   const navigate = useNavigate();
-  const { breedId } = useParams<{ breedId: string }>();
-  const { breed, breedImages, isLoading, error, fetchBreedDetail } = useFetchBreedDetail();
+  const location = useLocation();
+  const state = location.state as { backgroundLocation?: Location } | undefined;
+  const { id } = useParams<{ id: string }>();
+  const closeTo = state?.backgroundLocation ? -1 : "/breeds"; // fallback
 
-  const navigateBreeds = useCallback(() => navigate('/breeds'), [navigate]);
+  // fetch data (typed) — if you already have data available via props/state, use that
+  const [breed, setBreed] = React.useState<Breed | null>(null);
+  const [loading, setLoading] = React.useState<boolean>(true);
+  const [error, setError] = React.useState<string | null>(null);
 
   useEffect(() => {
-    if (!breedId) {
-      navigateBreeds();
-      return;
-    }
-    const initialBreed =
-      typeof location.state === 'object' && location.state && 'breed' in location.state
-        ? location.state.breed
-        : undefined;
-    void fetchBreedDetail(breedId, initialBreed);
-  }, [breedId, fetchBreedDetail, location.state, navigateBreeds]);
+    let mounted = true;
+    setLoading(true);
+    fetchBreedById(id!)
+      .then((res) => mounted && setBreed(res))
+      .catch((e) => mounted && setError((e as Error).message))
+      .finally(() => mounted && setLoading(false));
+    return () => { mounted = false; };
+  }, [id]);
 
-  const closeModal = () => {
-    void navigateBreeds();
+  const handleCloseModal = () => {
+    if (typeof closeTo === 'number') {
+      navigate(closeTo);
+    } else {
+      navigate(closeTo);
+    }
   };
 
-  const errorMessage = useMemo(() => (error ?? !breed) ? 'Failed to load breed details.' : undefined, [error, breed]);
+  // ESC closes
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") handleCloseModal(); };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [handleCloseModal]);
 
-  return (
-    <Modal onClose={closeModal}>
-      {isLoading && !breed && (
-        <div className="p-4">
-          <Skeleton height="30px" width="70%" className="mb-4" />
-          <Skeleton height="20px" width="90%" className="mb-2" />
-          <Skeleton height="20px" width="80%" className="mb-4" />
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {Array.from({ length: 4 }).map((_, i) => (
-              <Skeleton key={i} width="100%" height="150px" className="rounded-lg" />
-            ))}
-          </div>
-        </div>
-      )}
-      {error && !breed && <ErrorMessage message={errorMessage || 'An unknown error occurred.'} onRetry={() => void fetchBreedDetail(breedId!)} />}
-      {breed && (
-        <>
-          <h1>{breed.name}</h1>
-          <p>{breed.description}</p>
-          <ImageGallery images={breedImages} />
-        </>
-      )}
-      {!isLoading && !error && !breed && <p className="text-center my-4">No breed details found.</p>}
-    </Modal>
+  // focus first actionable element on mount
+  const closeBtnRef = useRef<HTMLButtonElement | null>(null);
+  useEffect(() => { closeBtnRef.current?.focus(); }, []);
+
+  // If loading show skeletons (same layout as content)
+  const content = loading ? (
+    <div>
+      <Skeleton height="400px" className="mb-4 rounded" />
+      <Skeleton width="60%" />
+      <Skeleton width="90%" />
+    </div>
+  ) : error ? (
+    <div role="alert">Failed to load: {error}</div>
+  ) : (
+    <div>
+      <h2>{breed?.name}</h2>
+      <p>{breed?.description}</p>
+      {/* details */}
+    </div>
   );
-}
 
-export default BreedDetail
+  // Layout: overlay if there's backgroundLocation, otherwise full page
+  const isOverlay = !!state?.backgroundLocation;
+  const modalInner = (
+    <div className="relative bg-white p-4 rounded-lg shadow-lg max-w-3xl w-full">
+      <button ref={closeBtnRef} aria-label="Close" onClick={handleCloseModal} className="absolute right-2 top-2">✕</button>
+      {content}
+    </div>
+  );
+
+  return isOverlay ? (
+    <div className="fixed inset-0 z-50 flex items-center justify-center">
+      <div className="absolute inset-0 bg-black/50" onClick={handleCloseModal} data-testid="modal-backdrop" />
+      <FocusTrap>{modalInner}</FocusTrap>
+    </div>
+  ) : (
+    <div className="p-6">{modalInner}</div>
+  );
+};
+
+export default BreedModal;
