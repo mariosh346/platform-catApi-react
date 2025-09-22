@@ -22,6 +22,7 @@ const ImageCard = memo(({ image, renderAfterImage }: ImageCardProps): JSX.Elemen
                 <img
                     src={image.url}
                     alt="cat"
+                    data-cy="image-card-image"
                     className={`w-48 h-48 object-cover rounded-lg shadow-md ${isLoadingImage ? 'hidden' : 'block'}`}
                     // loading="lazy" // Implement lazy-loading
                     onLoad={() => setIsLoadingImage(false)}

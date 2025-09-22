@@ -1,31 +1,28 @@
 // eslint-disable-next-line @typescript-eslint/triple-slash-reference
 /// <reference types="cypress" />
 
+const visitHomePage = () => {
+  cy.visit('/');
+};
+
 describe('Home Page Tests', () => {
   beforeEach(() => {
     cy.clearLocalStorage('favorites'); // Clear favorites before each test
   });
 
   it('displays the header "Random Cats"', () => {
-    cy.visit('/');
+    visitHomePage();
     cy.get('[data-cy="home-header"]').contains('Random Cats').should('exist');
   });
 
   it('loads images and shows the "Load More" button', () => {
-    cy.intercept('GET', '**/images/search?limit=10', { fixture: 'catImages.json' }).as('getCatImages');
-    cy.visit('/');
-    cy.wait('@getCatImages');
+    visitHomePage();
     cy.get('[data-cy="image-card-image"]').should('have.length.greaterThan', 0);
     cy.get('[data-cy="load-more-button"]').should('exist');
   });
 
   it('displays skeleton loaders while fetching images', () => {
-    cy.intercept('GET', '**/images/search?limit=10', (req) => {
-      req.reply({
-        delay: 500, // Simulate network delay
-        fixture: 'catImages.json',
-      });
-    }).as('getCatImagesDelayed');
+    cy.intercept('GET', '**/images/search?limit=10').as('getCatImagesDelayed');
     cy.visit('/');
     cy.get('[data-cy="skeleton-loader"]').should('have.length', 10); // Check for 10 skeleton cards
     cy.wait('@getCatImagesDelayed');
@@ -50,33 +47,22 @@ describe('Home Page Tests', () => {
   });
 
   it('navigates to image detail on image click', () => {
-    cy.intercept('GET', '**/images/search?limit=10', { fixture: 'catImages.json' }).as('getCatImages');
-    cy.visit('/');
-    cy.wait('@getCatImages');
+    visitHomePage();
     cy.get('[data-cy="image-card-image"]').first().click();
     cy.url().should('include', '/image/');
     cy.get('[role="dialog"]').should('be.visible');
   });
 
   it('closes the modal on Escape key press', () => {
-    cy.intercept('GET', '**/images/search?limit=10', { fixture: 'catImages.json' }).as('getCatImages');
-    cy.visit('/');
-    cy.wait('@getCatImages');
+    visitHomePage();
     cy.get('[data-cy="image-card-image"]').first().click();
     cy.get('[role="dialog"]').should('be.visible');
     cy.realPress('{esc}'); // Use cypress-real-events for Escape key
     cy.get('[role="dialog"]').should('not.exist');
   });
 
-  it('displays "No favorite cats yet." when favorites are empty', () => {
-    cy.visit('/favorites');
-    cy.get('[data-cy="no-favorites-message"]').contains('No favorite cats yet.').should('exist');
-  });
-
   it('adds and removes image from favorites', () => {
-    cy.intercept('GET', '**/images/search?limit=10', { fixture: 'catImages.json' }).as('getCatImages');
-    cy.visit('/');
-    cy.wait('@getCatImages');
+    visitHomePage();
     cy.get('[data-cy="image-card-image"]').first().click();
     cy.get('[role="dialog"]').should('be.visible');
 
@@ -98,7 +84,7 @@ describe('Home Page Tests', () => {
     // Remove from favorites
     cy.get('[data-cy="remove-from-favourites-button"]').click();
     cy.get('[data-cy="mark-as-favourite-button"]').should('exist'); // Button text changes back
-    cy.get('[data-cy="close-modal-button"]').click(); // Close modal by clicking the close button
+    cy.get('[aria-label="Close modal"]').click(); // Close modal by clicking the close button
 
     // Verify no favorites
     cy.get('[data-cy="no-favorites-message"]').contains('No favorite cats yet.').should('exist');
