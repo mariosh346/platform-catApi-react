@@ -12,7 +12,7 @@ const ImageCard = memo(({ image, renderAfterImage }: ImageCardProps): JSX.Elemen
     const [isLoadingImage, setIsLoadingImage] = useState(true);
 
     return (
-        <div className="flex flex-wrap m-3 relative">
+        <div className="flex flex-wrap flex-col m-3 relative">
             <Link
                 to={`/image/${image.id}`}
                 state={{ image }}
