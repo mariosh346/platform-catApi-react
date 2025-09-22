@@ -16,10 +16,10 @@ function Home(): JSX.Element {
 
   return (
     <div>
-      <h1>Random Cats</h1>
+      <h1 data-cy="home-header">Random Cats</h1>
       {error && <ErrorMessage message="Failed to load images." onRetry={() => void fetchImages()} />}
       {!isLoading && !error && images.length === 0 && (
-        <p className="text-center my-4">No images found.</p>
+        <p className="text-center my-4" data-cy="no-images-found-message">No images found.</p>
       )}
       <ImageGallery images={images} isLoading={isLoading} />
       <div className="flex justify-center my-4">
@@ -29,6 +29,7 @@ function Home(): JSX.Element {
           }}
           isLoading={isLoading}
           disabled={isLoading}
+          data-cy="load-more-button"
         >
           Load More
         </Button>

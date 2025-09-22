@@ -32,6 +32,7 @@ const Button = ({
         <button
             className={`${baseStyles} ${variantStyles[variant]} ${sizeStyles[size]} ${className} ${isLoading ? 'animate-pulse' : ''}`}
             disabled={isLoading || disabled}
+            data-cy={`${(children as string).toLowerCase().replace(/\s/g, '-')}-button`}
             {...rest}
         >
             {isLoading ? 'Loading...' : children}

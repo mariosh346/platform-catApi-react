@@ -18,19 +18,19 @@ function App() {
   return (
     <div>
       <nav>
-        <Link to="/" onMouseEnter={() => void loadHome()}>
+        <Link to="/" onMouseEnter={() => void loadHome()} data-cy="home-link">
           Home
         </Link>
         <span className='px-1'>|</span>
-        <Link to="/breeds" onMouseEnter={() => void loadBreeds()}>
+        <Link to="/breeds" onMouseEnter={() => void loadBreeds()} data-cy="breeds-link">
           Breeds
         </Link>
         <span className='px-1'>|</span>
-        <Link to="/favorites" onMouseEnter={() => void loadFavorites()}>
+        <Link to="/favorites" onMouseEnter={() => void loadFavorites()} data-cy="favorites-link">
           Favorites
         </Link>
       </nav>
-      
+
       <Suspense fallback={<div>Loading...</div>}>
         <Routes>
           <Route path="/" element={<Home />} />

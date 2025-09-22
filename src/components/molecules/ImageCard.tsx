@@ -18,7 +18,7 @@ const ImageCard = memo(({ image, renderAfterImage }: ImageCardProps): JSX.Elemen
                 state={{ image }}
                 onMouseEnter={() => void import('../../views/ImageView')}
             >
-                {isLoadingImage && <Skeleton width="192px" height="192px" className="rounded-lg shadow-md" />}
+                {isLoadingImage && <Skeleton width="192px" height="192px" className="rounded-lg shadow-md" data-cy="image-card-skeleton" />}
                 <img
                     src={image.url}
                     alt="cat"
