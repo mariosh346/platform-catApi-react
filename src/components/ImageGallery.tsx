@@ -6,11 +6,11 @@ import Skeleton from './atoms/Skeleton';
 interface ImageGalleryProps {
   images: CatImage[];
   renderAfterImage?: (image: CatImage) => JSX.Element;
-  isLoading?: boolean; // Added isLoading prop
+  isLoading?: boolean;
 }
 
 const ImageGallery = React.memo(({ images, renderAfterImage, isLoading = false }: ImageGalleryProps): JSX.Element => {
-  const numberOfSkeletons = 10; // Display 10 skeleton cards while loading
+  const numberOfSkeletons = 10;
 
   return (
     <div className="flex flex-wrap justify-center" data-cy="image-gallery">

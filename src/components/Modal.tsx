@@ -3,8 +3,8 @@ import { JSX, useEffect, useRef, useCallback, useMemo } from 'react';
 interface ModalProps {
   children: React.ReactNode;
   onClose: () => void;
-  title?: string; // Added for ARIA-labelledby
-  description?: string; // Added for ARIA-describedby
+  title?: string;
+  description?: string;
 }
 
 function Modal({ children, onClose, title, description }: ModalProps): JSX.Element {
@@ -52,12 +52,12 @@ function Modal({ children, onClose, title, description }: ModalProps): JSX.Eleme
     };
 
     modalRef.current?.addEventListener('keydown', handleTabKeyPress);
-    firstElement?.focus(); // Focus on the first element when modal opens
+    firstElement?.focus();
 
     return () => {
       modalRef.current?.removeEventListener('keydown', handleTabKeyPress);
     };
-  }, [children]); // Re-run when modal content changes
+  }, [children]);
 
   const modalId = useMemo(() => `modal-${Math.random().toString(36).substring(2, 9)}`, []);
   const titleId = title ? `${modalId}-title` : undefined;

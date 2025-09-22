@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import { getBreedById, getBreedImages } from '../api/catApi';
 import { Breed, CatImage } from '../api/types';
 import { parseBreed } from '../api/parsers';
@@ -23,7 +23,6 @@ const useFetchBreedDetail = (): UseFetchBreedDetailResult => {
     try {
       let fetchedBreed: Breed | null = null;
 
-      // Try to parse from initialBreed (e.g., from location.state)
       if (initialBreed) {
         try {
           fetchedBreed = parseBreed(initialBreed);
@@ -32,14 +31,12 @@ const useFetchBreedDetail = (): UseFetchBreedDetailResult => {
         }
       }
 
-      // If not found in initialBreed or parsing failed, fetch from API
       if (!fetchedBreed) {
         fetchedBreed = await getBreedById(breedId);
       }
 
       setBreed(fetchedBreed);
 
-      // Fetch images for the breed
       const images = await getBreedImages(breedId, 10);
       setBreedImages(images);
     } catch (err) {

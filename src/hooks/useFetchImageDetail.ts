@@ -21,7 +21,6 @@ const useFetchImageDetail = (): UseFetchImageDetailResult => {
     try {
       let fetchedImage: CatImage | null = null;
 
-      // Try to parse from initialImage (e.g., from location.state)
       if (initialImage) {
         try {
           const [image] = parseCatImages([initialImage]);
@@ -31,7 +30,6 @@ const useFetchImageDetail = (): UseFetchImageDetailResult => {
         }
       }
 
-      // If not found in initialImage or parsing failed, fetch from API
       if (!fetchedImage) {
         fetchedImage = await getImageById(imageId);
       }
