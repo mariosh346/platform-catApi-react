@@ -1,34 +1,41 @@
-import { JSX, useEffect } from 'react'
-import useFetchedImages from '../hooks/useFetchedImages'
-import ImageGallery from '../components/ImageGallery'
+import React, { JSX, useEffect } from 'react';
+import useFetchCatImages from '../hooks/useFetchCatImages';
+import ImageGallery from '../components/ImageGallery';
+import Button from '../components/atoms/Button';
+import ErrorMessage from '../components/atoms/ErrorMessage';
 
 function Home(): JSX.Element {
-  const { images, fetchImages, isLoading, error } = useFetchedImages()
+  const { images, fetchImages, isLoading, error } = useFetchCatImages();
 
   useEffect(() => {
-    if (isLoading || images.length > 0) return
-    void fetchImages()
-  // we only want to fetch new images when the component mounts
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+    if (isLoading || images.length > 0) return;
+    void fetchImages();
+    // we only want to fetch new images when the component mounts
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div>
-      <h1>Random Cats</h1>
-      {images.length && <div>
-        <ImageGallery images={images} />
-        <button 
-          type="button" 
-          onClick={() => { void fetchImages(false) }}
+      <h1 data-cy="home-header">Random Cats</h1>
+      {error && <ErrorMessage message="Failed to load images." onRetry={() => void fetchImages()} />}
+      {!isLoading && !error && images.length === 0 && (
+        <p className="text-center my-4" data-cy="no-images-found-message">No images found.</p>
+      )}
+      <ImageGallery images={images} isLoading={isLoading} />
+      <div className="flex justify-center my-4">
+        <Button
+          onClick={() => {
+            void fetchImages(false);
+          }}
+          isLoading={isLoading}
           disabled={isLoading}
+          data-cy="load-more-button"
         >
           Load More
-        </button>
-      </div>}
-      {isLoading && <p>Loading...</p>}
-      {error && <p className="text-red-500">{error}</p>}
+        </Button>
+      </div>
     </div>
-  )
+  );
 }
 
 export default Home

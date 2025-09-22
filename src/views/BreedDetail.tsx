@@ -1,83 +1,62 @@
-import { useEffect, useState, JSX, useCallback, useMemo } from 'react'
-import { useLocation, useNavigate, useParams, Location } from 'react-router-dom'
-import Modal from '../components/Modal'
-import { getBreedById, getBreedImages } from '../api/catApi'
-import ImageGallery from '../components/ImageGallery'
-import { parseBreed } from '../api/parsers'
-import { Breed, CatImage } from '../api/types'
+import React, { useEffect, JSX, useCallback, useMemo } from 'react';
+import { useLocation, useNavigate, useParams, Location } from 'react-router-dom';
+import Modal from '../components/Modal';
+import ImageGallery from '../components/ImageGallery';
+import useFetchBreedDetail from '../hooks/useFetchBreedDetail';
+import Skeleton from '../components/atoms/Skeleton';
+import ErrorMessage from '../components/atoms/ErrorMessage';
 
 function BreedDetail(): JSX.Element {
-  const location: Location<unknown> = useLocation()
-  const navigate = useNavigate()
-  const { breedId } = useParams<{ breedId: string }>()
-  const [breedImages, setBreedImages] = useState<CatImage[]>([])
-  const [isLoading, setIsLoading] = useState(true)
-	const [error, setError] = useState<string | null>(null)
-  const [breed, setBreed] = useState<Breed | null>(null);
-  const navigateBreeds = useCallback(() => navigate('/breeds'), [navigate])
+  const location: Location<unknown> = useLocation();
+  const navigate = useNavigate();
+  const { breedId } = useParams<{ breedId: string }>();
+  const { breed, breedImages, isLoading, error, fetchBreedDetail } = useFetchBreedDetail();
 
-  const fetchBreedFromState = useCallback(() => {
-    const breedUnParsed: unknown = (typeof location.state === 'object'
-    && location.state && 'breed' in location.state)
-      ? location.state.breed
-      : undefined
-    if (breedUnParsed) {
-    try {
-      setBreed(parseBreed(breedUnParsed))
-    } catch {
-      console.error('Invalid state data:')
-    }}
-  }, [location.state])
-
-  const fetchBreedFromApi = useCallback(async (id: string) => {
-    try {
-      const breed = await getBreedById(id)
-      setBreed(breed)
-    } catch (err) {
-      console.error('Failed to fetch image:', err)
-      setError('Failed to load image')
-    }
-  }, [])
-
+  const navigateBreeds = useCallback(() => navigate('/breeds'), [navigate]);
 
   useEffect(() => {
-    if (!breedId) return
-		setIsLoading(true)
-    fetchBreedFromState()
-    if (breedId) {
-      void fetchBreedImages(breedId)
-      void fetchBreedFromApi(breedId)
+    if (!breedId) {
+      navigateBreeds();
+      return;
     }
-    setIsLoading(false)
-  }, [breedId, fetchBreedFromApi, fetchBreedFromState])
-
-  const fetchBreedImages = async (breedId: string) => {
-    try {
-      const data = await getBreedImages(breedId, 10)
-      setBreedImages(data)
-    } catch (error) {
-      console.error(error)
-    }
-  }
+    const initialBreed =
+      typeof location.state === 'object' && location.state && 'breed' in location.state
+        ? location.state.breed
+        : undefined;
+    void fetchBreedDetail(breedId, initialBreed);
+  }, [breedId, fetchBreedDetail, location.state, navigateBreeds]);
 
   const closeModal = () => {
-    void navigateBreeds()
-  }
+    void navigateBreeds();
+  };
 
-  const errorMessage = useMemo(() => 
-      (error ?? !breed) ? 'Error loading breed' : undefined,
-      [error, breed]
-    )
+  const errorMessage = useMemo(() => (error ?? !breed) ? 'Failed to load breed details.' : undefined, [error, breed]);
 
   return (
-    <Modal onClose={closeModal} isLoading={isLoading} error={errorMessage}>
-      {breed && <>
-        <h1>{breed.name}</h1>
-        <p>{breed.description}</p>
-        <ImageGallery images={breedImages} />
-      </>}
+    <Modal onClose={closeModal}>
+      {isLoading && !breed && (
+        <div className="p-4">
+          <Skeleton height="30px" width="70%" className="mb-4" />
+          <Skeleton height="20px" width="90%" className="mb-2" />
+          <Skeleton height="20px" width="80%" className="mb-4" />
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <Skeleton key={i} width="100%" height="150px" className="rounded-lg" />
+            ))}
+          </div>
+        </div>
+      )}
+      {error && !breed && <ErrorMessage message={errorMessage || 'An unknown error occurred.'} onRetry={() => void fetchBreedDetail(breedId!)} />}
+      {breed && (
+        <>
+          <h1>{breed.name}</h1>
+          <p>{breed.description}</p>
+          <ImageGallery images={breedImages} />
+        </>
+      )}
+      {!isLoading && !error && !breed && <p className="text-center my-4">No breed details found.</p>}
     </Modal>
-  )
+  );
 }
 
 export default BreedDetail
