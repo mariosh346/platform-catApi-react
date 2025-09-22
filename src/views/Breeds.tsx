@@ -1,4 +1,4 @@
-import React, { useMemo, JSX, memo, useEffect } from 'react';
+import { useMemo, JSX, memo, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Breed } from '../api/types';
 import useFetchBreeds from '../hooks/useFetchBreeds';

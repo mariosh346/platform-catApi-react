@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import { getImageById } from '../api/catApi';
 import { CatImage } from '../api/types';
 import { parseCatImages } from '../api/parsers';
