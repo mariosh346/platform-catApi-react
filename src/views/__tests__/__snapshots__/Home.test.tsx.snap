@@ -4,7 +4,9 @@ exports[`Home > should have the same snapshot as befoere 1`] = `
 <body>
   <div>
     <div>
-      <h1>
+      <h1
+        data-cy="home-header"
+      >
         Random Cats
       </h1>
       <div
@@ -14,60 +16,70 @@ exports[`Home > should have the same snapshot as befoere 1`] = `
         <div
           aria-label="loading"
           class="bg-gray-300 rounded-lg shadow-md animate-pulse m-3"
+          data-cy="skeleton-loader"
           role="status"
           style="width: 200px; height: 200px;"
         />
         <div
           aria-label="loading"
           class="bg-gray-300 rounded-lg shadow-md animate-pulse m-3"
+          data-cy="skeleton-loader"
           role="status"
           style="width: 200px; height: 200px;"
         />
         <div
           aria-label="loading"
           class="bg-gray-300 rounded-lg shadow-md animate-pulse m-3"
+          data-cy="skeleton-loader"
           role="status"
           style="width: 200px; height: 200px;"
         />
         <div
           aria-label="loading"
           class="bg-gray-300 rounded-lg shadow-md animate-pulse m-3"
+          data-cy="skeleton-loader"
           role="status"
           style="width: 200px; height: 200px;"
         />
         <div
           aria-label="loading"
           class="bg-gray-300 rounded-lg shadow-md animate-pulse m-3"
+          data-cy="skeleton-loader"
           role="status"
           style="width: 200px; height: 200px;"
         />
         <div
           aria-label="loading"
           class="bg-gray-300 rounded-lg shadow-md animate-pulse m-3"
+          data-cy="skeleton-loader"
           role="status"
           style="width: 200px; height: 200px;"
         />
         <div
           aria-label="loading"
           class="bg-gray-300 rounded-lg shadow-md animate-pulse m-3"
+          data-cy="skeleton-loader"
           role="status"
           style="width: 200px; height: 200px;"
         />
         <div
           aria-label="loading"
           class="bg-gray-300 rounded-lg shadow-md animate-pulse m-3"
+          data-cy="skeleton-loader"
           role="status"
           style="width: 200px; height: 200px;"
         />
         <div
           aria-label="loading"
           class="bg-gray-300 rounded-lg shadow-md animate-pulse m-3"
+          data-cy="skeleton-loader"
           role="status"
           style="width: 200px; height: 200px;"
         />
         <div
           aria-label="loading"
           class="bg-gray-300 rounded-lg shadow-md animate-pulse m-3"
+          data-cy="skeleton-loader"
           role="status"
           style="width: 200px; height: 200px;"
         />
@@ -77,6 +89,7 @@ exports[`Home > should have the same snapshot as befoere 1`] = `
       >
         <button
           class="font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline bg-blue-500 hover:bg-blue-700 text-white text-base  animate-pulse"
+          data-cy="load-more-button"
           disabled=""
         >
           Loading...
