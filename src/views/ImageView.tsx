@@ -1,4 +1,4 @@
-import React, { useEffect, JSX, useMemo, useCallback } from 'react';
+import { useEffect, JSX, useMemo, useCallback } from 'react';
 import { useNavigate, useParams, useLocation, Location } from 'react-router-dom';
 import Modal from '../components/Modal';
 import { CatImage } from '../api/types';

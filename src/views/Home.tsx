@@ -1,4 +1,4 @@
-import React, { JSX, useEffect } from 'react';
+import { JSX, useEffect } from 'react';
 import useFetchCatImages from '../hooks/useFetchCatImages';
 import ImageGallery from '../components/ImageGallery';
 import Button from '../components/atoms/Button';
